@@ -16,26 +16,17 @@ var assets = {
 		filteredData = this.data.filter(function (x) {return symbols.indexOf(x.code) != -1;} );
 		for (d in filteredData) {
 			element = filteredData[d]
-			stringHTML = stringHTML + '<tr> \
-										<td><label><input type="checkbox" name="' + element.code + '" checked="checked" onchange="reloadLines();"></input></label></td> \
-										<td>' + element.type + '</td> \
-										<td> <a href="catalogo.html">' + element.code + '</a></td> \
-										<td>' + element.description + '</td> \
-										<td>' + element.value + '</td> \
-									</tr>'
+			stringHTML += '<tr> \
+								<td><label><input type="checkbox" name="' + element.code + '" checked="checked" onchange="reloadLines();"></input></label></td> \
+								<td>' + element.type + '</td> \
+								<td> <a href="catalogo.html">' + element.code + '</a></td> \
+								<td>' + element.description + '</td> \
+								<td>' + element.value + '</td> \
+							</tr>'
 		};
 							
-		stringHTML = stringHTML + '</tbody> \
-							<tfoot> \
-								<tr> \
-									<th>Incluir</th> \
-									<th>Tipo</th> \
-									<th>Código</th> \
-									<th>Descripción</th> \
-									<th>Valor</th> \
-								</tr> \
-							</tfoot> \
-						</table>';
+		stringHTML += '</tbody> \
+					</table>';
 		
 		return stringHTML
 	},
@@ -7465,26 +7456,16 @@ var portfolios = {
 	maxDate: function (a) {
 		maxDateValue = NaN;
 		for (dates in a) {
-			date = new Date(a[dates].date)
-			if(!maxDateValue || date > new Date(maxDateValue) ) {maxDateValue = a[dates].date };
+			date = new Date(a[dates].date.split('-') )
+			if(!maxDateValue || date > new Date(maxDateValue.split('-') ) ) {maxDateValue = a[dates].date };
 		};
 		return maxDateValue;
 	},
 
 	portfolioValue: function(p, date, symbols) {
-		txs = this.data[p].filter(function (x) {return new Date(x.date) <= new Date(date);} );
+		txs = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() <= new Date(date.split('-') ).getTime();} );
 		maxDateValue = this.maxDate(txs);
 		return this.transactionsValueInPortfolio(txs.filter(function (x) {return x.date == maxDateValue; } )[0].transactions, symbols );
-	},
-
-	lineData: function (p, dateFrom, dateTo, symbols) {
-		lineDataValue = [];
-		filteredData = this.data[p].filter(function (x) {return new Date(x.date) >= new Date(dateFrom) && new Date(x.date) <= new Date(dateTo);} );
-		for (x in filteredData) {
-			value = filteredData[x];
-			lineDataValue.push({date: value.date, value: this.portfolioValue(p, value.date, symbols) } );
-		};
-		return lineDataValue;
 	},
 
 	symbolsInPortfolio: function (p) {
@@ -7499,7 +7480,7 @@ var portfolios = {
 
 	portfolioMinValue: function (p, dateFrom, dateTo, symbols) {
 		minValue = 0;
-		filteredData = this.data[p].filter(function (x) {return new Date(x.date) >= new Date(dateFrom) && new Date(x.date) <= new Date(dateTo);} );
+		filteredData = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );
 		for (x in filteredData) {
 			value = this.portfolioValue(p, filteredData[x].date, symbols);
 			minValue == 0 || value < minValue ? minValue = value : minValue = minValue;
@@ -7509,7 +7490,7 @@ var portfolios = {
 
 	portfolioMaxValue: function (p, dateFrom, dateTo, symbols) {
 		maxValue = 0;
-		filteredData = this.data[p].filter(function (x) {return new Date(x.date) >= new Date(dateFrom) && new Date(x.date) <= new Date(dateTo);} );
+		filteredData = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );
 		for (x in filteredData) {
 			value = this.portfolioValue(p, filteredData[x].date, symbols);
 			value > maxValue ? maxValue = value : maxValue = maxValue;
@@ -7522,7 +7503,7 @@ var portfolios = {
 		data = this.data[p];
 		for (x in data) {
 			date = data[x].date;
-			minDate == '2100-12-31' || new Date(date) < new Date(minDate) ? minDate = date : minDate = minDate;
+			minDate == '2100-12-31' || new Date(date.split('-') ).getTime() < new Date(minDate.split('-') ).getTime() ? minDate = date : minDate = minDate;
 		};
 		return minDate;
 	},
@@ -7532,9 +7513,65 @@ var portfolios = {
 		data = this.data[p];
 		for (x in data) {
 			date = data[x].date;
-			maxDate == '1900-01-01' || new Date(date) > new Date(maxDate) ? maxDate = date : maxDate = maxDate;
+			maxDate == '1900-01-01' || new Date(date.split('-') ).getTime() > new Date(maxDate.split('-') ).getTime() ? maxDate = date : maxDate = maxDate;
 		};
 		return maxDate;
+	},
+
+	transactionsValueInvestments: function(t, symbols) {
+		value = 0;
+		for (txs in t) {
+			tx = t[txs];
+			value += tx.type == 'Inversión' && symbols.indexOf(tx.symbol) != -1 ? tx.value * tx.quantity : 0;
+		}
+		return value
+	},
+
+	portfolioInvestment: function(p, date, symbols) {
+		txs = this.data[p].filter(function (i) {return new Date(i.date.split('-') ).getTime() == new Date(date.split('-') ).getTime();} );
+		return this.transactionsValueInvestments(txs[0].transactions, symbols);
+	},
+
+	portfolioAccumInvestment: function(p, date, symbols) {
+		accumInvestments = 0;
+		filteredData = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() <= new Date(date.split('-') ).getTime() ;} );
+		for (x in filteredData) {
+			accumInvestments += this.portfolioInvestment(p, filteredData[x].date, symbols);
+		}
+		return accumInvestments;
+	},
+
+	transactionsValueCapitalization: function(t, symbols) {
+		value = 0;
+		for (txs in t) {
+			tx = t[txs];
+			value += tx.type == 'Capitalizado' && symbols.indexOf(tx.symbol) != -1 ? tx.value * tx.quantity : 0;
+		}
+		return value
+	},
+
+	portfolioCapitalization: function(p, date, symbols) {
+		txs = this.data[p].filter(function (i) {return new Date(i.date.split('-') ).getTime() == new Date(date.split('-') ).getTime();} );
+		return this.transactionsValueCapitalization(txs[0].transactions, symbols);
+	},
+
+	portfolioAccumCapitalization: function(p, date, symbols) {
+		accumCapitalization = 0;
+		filteredData = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() <= new Date(date.split('-') ).getTime() ;} );
+		for (x in filteredData) {
+			accumCapitalization += this.portfolioCapitalization(p, filteredData[x].date, symbols);
+		}
+		return accumCapitalization;
+	},
+
+	chartData: function (p, dateFrom, dateTo, symbols) {
+		chartDataValue = [];
+		filteredData = this.data[p].filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );
+		for (x in filteredData) {
+			dateValue = filteredData[x].date;
+			chartDataValue.push({date: dateValue, value: this.portfolioValue(p, dateValue, symbols), investment: this.portfolioInvestment(p, dateValue, symbols), capitalization: this.portfolioCapitalization(p, dateValue, symbols) } );
+		};
+		return chartDataValue;
 	}
 };
 
@@ -7542,10 +7579,13 @@ var loadLines = function(portfolio, startDate, endDate, symbols) {
 	minValue = portfolios.portfolioMinValue(portfolio, startDate, endDate, symbols);
 	maxValue = portfolios.portfolioMaxValue(portfolio, startDate, endDate, symbols);
 	document.getElementById('line-chart').innerHTML = '';
+
+	data = portfolios.chartData(portfolio, startDate, endDate, symbols);
+
 	var line = new Morris.Line({
 		element: 'line-chart',
 		resize: true,
-		data: portfolios.lineData(portfolio, startDate, endDate, symbols),
+		data: data,
 		xkey: 'date',
 		ykeys: ['value'],
 		labels: ['Value'],
@@ -7565,8 +7605,12 @@ var loadLines = function(portfolio, startDate, endDate, symbols) {
 				},
 		ymax: 'auto',
 		ymin: minValue - (maxValue / 4),
-		yLabelFormat: function (y) {return Math.round(y);}
+		yLabelFormat: function (y) {return Math.round(y);},
+		events: $.map(data.filter(function (x) {return x.investment > 0 || x.capitalization > 0; } ), function (x) {return x.date; } ),
+		eventStrokeWidth: 2,
+		eventLineColors: $.map(data.filter(function (x) {return x.investment > 0 || x.capitalization > 0; } ), function (x) {return x.investment > 0 ? '#8B0000' : '#228B22'; } )
 	});
+
 };
 
 var reloadLines = function () {
@@ -7575,13 +7619,23 @@ var reloadLines = function () {
 	loadLines($("#portfolio-drop-down")[0].value, startDate, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) );
 };
 
+var addThousondSeparator = function(n, s) {
+	str = new String(n);
+	nFormatted = '';
+	for (i=str.length; i--; i > 0) {
+		(str.length - i - 1) % 3 == 0 && str.length - i > 2 ? nFormatted = str[i] + s + nFormatted : nFormatted = str[i] + nFormatted;
+	};
+	return nFormatted;
+};
+
 var portfolioChange = function () {
 
-	startDate = new Date(portfolios.portfolioMinDate($("#portfolio-drop-down")[0].value) );
+	startDate = new Date(portfolios.portfolioMinDate($("#portfolio-drop-down")[0].value).split('-') );
 	strStartDate = startDate.getDate() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getFullYear();
 
-	endDate = new Date(portfolios.portfolioMaxDate($("#portfolio-drop-down")[0].value) );
+	endDate = new Date(portfolios.portfolioMaxDate($("#portfolio-drop-down")[0].value).split('-') );
 	strEndDate = endDate.getDate() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getFullYear();
+
 	$('#date-range').daterangepicker( {
 		startDate: strStartDate,
 		endDate: strEndDate,
@@ -7592,4 +7646,13 @@ var portfolioChange = function () {
 
 	assets.loadTable(portfolios.symbolsInPortfolio($("#portfolio-drop-down")[0].value) );
 	reloadLines();
+
+	startDate = $('#date-range').val().split(' - ')[0].split('/')[2] + '-' + $('#date-range').val().split(' - ')[0].split('/')[1] + '-' + $('#date-range').val().split(' - ')[0].split('/')[0];
+	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
+
+	$('#investments')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumInvestment($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
+	$('#capitalization')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
+	$('#in-portfolio')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioValue($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
+	$('#total')[0].innerHTML = addThousondSeparator(Math.round($('#capitalization')[0].innerHTML.replace('.', '') ) + Math.round($('#in-portfolio')[0].innerHTML.replace('.', '') ), '.');
+	$('#performance')[0].innerHTML = new String(Math.round(1000 * ( (Math.round($('#total')[0].innerHTML.replace('.', '') )  - Math.round($('#investments')[0].innerHTML.replace('.', '') ) ) / Math.round($('#investments')[0].innerHTML.replace('.', '') ) ) ) / 10).replace('.', ',');
 };
