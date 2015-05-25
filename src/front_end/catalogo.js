@@ -15,13 +15,14 @@ var stocksCatalogue = {
 							</tbody> ';
 
 		for (stockData in this.data) {
+			element = this.data[stockData]
 			stringHTML = stringHTML + '<tr> \
-										<td> <a href="catalogo.html">' + this.data[stockData].code + '</a></td> \
-										<td>' + this.data[stockData].company + '</td> \
-										<td>' + this.data[stockData].industry + '</td> \
-										<td>' + this.data[stockData].subIndustry + '</td> \
-										<td>' + this.data[stockData].value + '</td> \
-										<td>' + this.data[stockData].trend + '</td> \
+										<td> <a href="catalogo.html">' + element.code + '</a></td> \
+										<td>' + element.company + '</td> \
+										<td>' + element.industry + '</td> \
+										<td>' + element.subIndustry + '</td> \
+										<td>' + element.value + '</td> \
+										<td>' + element.trend + '</td> \
 									</tr>'
 		};
 							
@@ -133,12 +134,12 @@ var bondsCatalogue = {
 
 		for (bondData in this.data) {
 			stringHTML = stringHTML + '<tr> \
-										<td> <a href="catalogo.html">' + this.data[bondData].code + '</a></td> \
-										<td>' + this.data[bondData].name + '</td> \
-										<td>' + this.data[bondData].currency + '</td> \
-										<td>' + this.data[bondData].term + '</td> \
-										<td>' + this.data[bondData].value + '</td> \
-										<td>' + this.data[bondData].payDate + '</td> \
+										<td> <a href="catalogo.html">' + element.code + '</a></td> \
+										<td>' + element.name + '</td> \
+										<td>' + element.currency + '</td> \
+										<td>' + element.term + '</td> \
+										<td>' + element.value + '</td> \
+										<td>' + element.payDate + '</td> \
 									</tr>'
 		};
 							
