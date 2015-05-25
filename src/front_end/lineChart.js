@@ -3780,6 +3780,13 @@ var portfolios = {
 			{symbol: 'dolar.blue', value: 8.88, quantity: 4000, type: 'En cartera'},
 			
 			{symbol: 'ypfd.ba', value: 361.5, quantity: 30, type: 'En cartera'}
+			]},
+			{date: '2015-4-20', transactions: [
+			{symbol: 'apbr.ba', value: 52.25, quantity: 800, type: 'En cartera'},
+			
+			{symbol: 'dolar.blue', value: 8.88, quantity: 4000, type: 'En cartera'},
+			
+			{symbol: 'ypfd.ba', value: 361.5, quantity: 30, type: 'En cartera'}
 			]}
 		],
 		[
@@ -7508,17 +7515,37 @@ var portfolios = {
 			value > maxValue ? maxValue = value : maxValue = maxValue;
 		};
 		return maxValue;
+	},
+
+	portfolioMinDate: function (p) {
+		minDate = '2100-12-31';
+		data = this.data[p];
+		for (x in data) {
+			date = data[x].date;
+			minDate == '2100-12-31' || new Date(date) < new Date(minDate) ? minDate = date : minDate = minDate;
+		};
+		return minDate;
+	},
+
+	portfolioMaxDate: function (p) {
+		maxDate = '1900-01-01';
+		data = this.data[p];
+		for (x in data) {
+			date = data[x].date;
+			maxDate == '1900-01-01' || new Date(date) > new Date(maxDate) ? maxDate = date : maxDate = maxDate;
+		};
+		return maxDate;
 	}
 };
 
-var loadLines = function(portfolio, symbols) {
-	minValue = portfolios.portfolioMinValue(portfolio, '2014-1-1', '2015-5-1', symbols);
-	maxValue = portfolios.portfolioMaxValue(portfolio, '2014-1-1', '2015-5-1', symbols);
+var loadLines = function(portfolio, startDate, endDate, symbols) {
+	minValue = portfolios.portfolioMinValue(portfolio, startDate, endDate, symbols);
+	maxValue = portfolios.portfolioMaxValue(portfolio, startDate, endDate, symbols);
 	document.getElementById('line-chart').innerHTML = '';
 	var line = new Morris.Line({
 		element: 'line-chart',
 		resize: true,
-		data: portfolios.lineData(portfolio, '2014-1-1', '2015-5-1', symbols),
+		data: portfolios.lineData(portfolio, startDate, endDate, symbols),
 		xkey: 'date',
 		ykeys: ['value'],
 		labels: ['Value'],
@@ -7543,12 +7570,26 @@ var loadLines = function(portfolio, symbols) {
 };
 
 var reloadLines = function () {
-	loadLines($("#portfolio-drop-down")[0].value, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) );
+	startDate = $('#date-range').val().split(' - ')[0].split('/')[2] + '-' + $('#date-range').val().split(' - ')[0].split('/')[1] + '-' + $('#date-range').val().split(' - ')[0].split('/')[0];
+	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
+	loadLines($("#portfolio-drop-down")[0].value, startDate, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) );
 };
 
 var portfolioChange = function () {
+
+	startDate = new Date(portfolios.portfolioMinDate($("#portfolio-drop-down")[0].value) );
+	strStartDate = startDate.getDate() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getFullYear();
+
+	endDate = new Date(portfolios.portfolioMaxDate($("#portfolio-drop-down")[0].value) );
+	strEndDate = endDate.getDate() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getFullYear();
+	$('#date-range').daterangepicker( {
+		startDate: strStartDate,
+		endDate: strEndDate,
+		minDate: strStartDate,
+		maxDate: strEndDate
+	} );
+	$('#date-range').val(strStartDate + ' - ' + strEndDate);
+
 	assets.loadTable(portfolios.symbolsInPortfolio($("#portfolio-drop-down")[0].value) );
 	reloadLines();
 };
-
-portfolioChange();
