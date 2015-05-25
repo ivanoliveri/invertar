@@ -16,28 +16,28 @@ var stocksCatalogue = {
 
 		for (stockData in this.data) {
 			element = this.data[stockData]
-			stringHTML = stringHTML + '<tr> \
-										<td> <a href="catalogo.html">' + element.code + '</a></td> \
-										<td>' + element.company + '</td> \
-										<td>' + element.industry + '</td> \
-										<td>' + element.subIndustry + '</td> \
-										<td>' + element.value + '</td> \
-										<td>' + element.trend + '</td> \
-									</tr>'
+			stringHTML += '<tr> \
+								<td> <a href="catalogo.html">' + element.code + '</a></td> \
+								<td>' + element.company + '</td> \
+								<td>' + element.industry + '</td> \
+								<td>' + element.subIndustry + '</td> \
+								<td>' + element.value + '</td> \
+								<td>' + element.trend + '</td> \
+							</tr>'
 		};
 							
-		stringHTML = stringHTML + '</tbody> \
-							<tfoot> \
-								<tr> \
-									<th>Código</th> \
-									<th>Empresa</th> \
-									<th>Rubro</th> \
-									<th>sub Rubro</th> \
-									<th>Valor</th> \
-									<th>Tendencia</th> \
-								</tr> \
-							</tfoot> \
-						</table>';
+		stringHTML += '</tbody> \
+						<tfoot> \
+							<tr> \
+								<th>Código</th> \
+								<th>Empresa</th> \
+								<th>Rubro</th> \
+								<th>sub Rubro</th> \
+								<th>Valor</th> \
+								<th>Tendencia</th> \
+							</tr> \
+						</tfoot> \
+					</table>';
 		
 		return stringHTML
 	},
