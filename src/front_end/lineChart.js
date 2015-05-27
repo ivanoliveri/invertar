@@ -9,6 +9,11 @@ var assets = {
 									<th>Código</th> \
 									<th>Descripción</th> \
 									<th>Valor</th> \
+									<th>Inversión</th> \
+									<th>Capitalizado</th> \
+									<th>En porfolio</th> \
+									<th>Total</th> \
+									<th>Rendimiento</th> \
 								</tr> \
 							</thead> \
 							</tbody> ';
@@ -21,7 +26,12 @@ var assets = {
 								<td>' + element.type + '</td> \
 								<td> <a href="catalogo.html">' + element.code + '</a></td> \
 								<td>' + element.description + '</td> \
-								<td>' + element.value + '</td> \
+								<td>' + new String(element.value).toString().replace('.', ',') + ' ARS</td> \
+								<td id="investment-' + element.code.replace('.', '-') + '"></td> \
+								<td id="capitalized-' + element.code.replace('.', '-') + '"></td> \
+								<td id="in-portfolio-' + element.code.replace('.', '-') + '"></td> \
+								<td id="total-' + element.code.replace('.', '-') + '"></td> \
+								<td id="performance-' + element.code.replace('.', '-') + '"></td> \
 							</tr>'
 		};
 							
@@ -7589,16 +7599,21 @@ var loadLines = function(portfolio, startDate, endDate, symbols) {
 		xkey: 'date',
 		ykeys: ['value'],
 		labels: ['Value'],
-		lineColors: ['#efefef'],
+		lineColors:['gray'],
 		lineWidth: 2,
+		fillOpacity: 0.6,
 		hideHover: 'auto',
-		gridTextColor: "#fff",
-		gridStrokeWidth: 0.4,
+		behaveLikeLine: true,
+		resize: true,
+		gridTextColor: "#000000",
+		gridStrokeWidth: 0.2,
 		pointSize: 1,
-		pointStrokeColors: ["#efefef"],
-		gridLineColor: "#efefef",
-		gridTextFamily: "Open Sans",
-		gridTextSize: 8,
+		pointFillColors: ["#efefef"],
+		pointStrokeColors: ["#000000"],
+		gridLineColor: "#000000",
+		//gridTextFamily: "Open Sans",
+		gridTextFamily: "Calibri",
+		gridTextSize: 10,
 		xLabelFormat: function (x) {
 					var xDate = new Date(x);
 					return xDate.getDate() + '/' + (xDate.getMonth() + 1) + '/' + xDate.getFullYear();
@@ -7613,12 +7628,6 @@ var loadLines = function(portfolio, startDate, endDate, symbols) {
 
 };
 
-var reloadLines = function () {
-	startDate = $('#date-range').val().split(' - ')[0].split('/')[2] + '-' + $('#date-range').val().split(' - ')[0].split('/')[1] + '-' + $('#date-range').val().split(' - ')[0].split('/')[0];
-	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
-	loadLines($("#portfolio-drop-down")[0].value, startDate, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) );
-};
-
 var addThousondSeparator = function(n, s) {
 	str = new String(n);
 	nFormatted = '';
@@ -7626,6 +7635,31 @@ var addThousondSeparator = function(n, s) {
 		(str.length - i - 1) % 3 == 0 && str.length - i > 2 ? nFormatted = str[i] + s + nFormatted : nFormatted = str[i] + nFormatted;
 	};
 	return nFormatted;
+};
+
+var reloadLines = function () {
+
+	p = $("#portfolio-drop-down")[0].value;
+	selectedSymbols = $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) );
+
+	startDate = $('#date-range').val().split(' - ')[0].split('/')[2] + '-' + $('#date-range').val().split(' - ')[0].split('/')[1] + '-' + $('#date-range').val().split(' - ')[0].split('/')[0];
+	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
+	loadLines(p, startDate, endDate, selectedSymbols );
+
+	$('#investments')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumInvestment(p, endDate, selectedSymbols) ), '.');
+	$('#capitalization')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization(p, endDate, selectedSymbols ) ), '.');
+	$('#in-portfolio')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioValue(p, endDate, selectedSymbols ) ), '.');
+	$('#total')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization(p, endDate, selectedSymbols ) ) + Math.round(portfolios.portfolioValue(p, endDate, selectedSymbols ) ), '.');
+	$('#performance')[0].innerHTML = new String(Math.round(1000 * (portfolios.portfolioAccumCapitalization(p, endDate, selectedSymbols ) + portfolios.portfolioValue(p, endDate, selectedSymbols ) - portfolios.portfolioAccumInvestment(p, endDate, selectedSymbols ) ) / portfolios.portfolioAccumInvestment(p, endDate, selectedSymbols ) ) / 10, '.').toString().replace('.', ',');
+
+	$.map(portfolios.symbolsInPortfolio(p), function (x) {$('#investment-' + x.replace('.', '-') )[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumInvestment(p, endDate, [x] ) ), '.') + ' ARS'; } );
+	$.map(portfolios.symbolsInPortfolio(p), function (x) {$('#capitalized-' + x.replace('.', '-') )[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization(p, endDate, [x] ) ), '.') + ' ARS'; } );
+	$.map(portfolios.symbolsInPortfolio(p), function (x) {$('#in-portfolio-' + x.replace('.', '-') )[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioValue(p, endDate, [x] ) ), '.') + ' ARS'; } );
+	$.map(portfolios.symbolsInPortfolio(p), function (x) {$('#total-' + x.replace('.', '-') )[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization(p, endDate, [x] ) ) + Math.round(portfolios.portfolioValue(p, endDate, [x] ) ), '.') + ' ARS'; } );
+	$.map(portfolios.symbolsInPortfolio(p), function (x) {$('#performance-' + x.replace('.', '-') )[0].innerHTML = new String(Math.round(1000 * (portfolios.portfolioAccumCapitalization(p, endDate, [x] ) + portfolios.portfolioValue(p, endDate, [x] ) - portfolios.portfolioAccumInvestment(p, endDate, [x] ) ) / portfolios.portfolioAccumInvestment(p, endDate, [x] ) ) / 10, '.').toString().replace('.', ',') + ' %'; } );
+
+	$('#line-chart-title')[0].innerHTML = 'Cierres diarios (' + $('#date-range').val() + ')'
+	$('#asset-table-title')[0].innerHTML = 'Cierres diarios (' + $('#date-range').val().split(' - ')[1] + ')'
 };
 
 var portfolioChange = function () {
@@ -7646,13 +7680,4 @@ var portfolioChange = function () {
 
 	assets.loadTable(portfolios.symbolsInPortfolio($("#portfolio-drop-down")[0].value) );
 	reloadLines();
-
-	startDate = $('#date-range').val().split(' - ')[0].split('/')[2] + '-' + $('#date-range').val().split(' - ')[0].split('/')[1] + '-' + $('#date-range').val().split(' - ')[0].split('/')[0];
-	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
-
-	$('#investments')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumInvestment($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
-	$('#capitalization')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioAccumCapitalization($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
-	$('#in-portfolio')[0].innerHTML = addThousondSeparator(Math.round(portfolios.portfolioValue($("#portfolio-drop-down")[0].value, endDate, $.map($("[type=checkbox]").filter(":checked"), (function (x) {return x.name; } ) ) ) ), '.');
-	$('#total')[0].innerHTML = addThousondSeparator(Math.round($('#capitalization')[0].innerHTML.replace('.', '') ) + Math.round($('#in-portfolio')[0].innerHTML.replace('.', '') ), '.');
-	$('#performance')[0].innerHTML = new String(Math.round(1000 * ( (Math.round($('#total')[0].innerHTML.replace('.', '') )  - Math.round($('#investments')[0].innerHTML.replace('.', '') ) ) / Math.round($('#investments')[0].innerHTML.replace('.', '') ) ) ) / 10).replace('.', ',');
 };
