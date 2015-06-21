@@ -7,6 +7,7 @@ var setStock = function (code) {
 	if (code == 'ypfd.ba') {
 		stock = {
 			code: 'ypfd.ba',
+			assetType: 'Acción',
 			company: 'YPF S.A.',
 			industry: 'Energía',
 			subIndustry: 'Petróleo',
@@ -313,11 +314,24 @@ var setStock = function (code) {
 					maxDate == '1900-01-01' || new Date(date.split('-') ).getTime() > new Date(maxDate.split('-') ).getTime() ? maxDate = date : maxDate = maxDate;
 				};
 				return maxDate;
+			},
+			htmlHeaderCode: function () {
+				return 		'<div class="col-lg-5 col-md-6 col-xs-12"> \
+								<div class="info-box"> \
+									<span class="info-box-icon bg-grey"></span> \
+									<div class="info-box-content"> \
+										<span class="info-box-number">' + this.company + ' (' + this.code + ') </span> \
+										<span class="info-box-text">Tipo de activo: ' + this.assetType + ' </span> \
+										<span class="info-box-text">Industria: ' + this.industry + ', ' + this.subIndustry + ' </span> \
+									</div> \
+								</div> \
+							</div>';
 			}
 		}
 	} else {
 		stock = {
 			code: 'apbr.ba',
+			assetType: 'Acción',
 			company: 'Petróleo Brasileiro S.A',
 			industry: 'Energía',
 			subIndustry: 'Petróleo',
@@ -625,6 +639,18 @@ var setStock = function (code) {
 					if (stock2.code == 'nan') {chartDataValue.push({date: dateValue, close: filteredData[x].close, change: filteredData[x].change});} else {chartDataValue.push({date: dateValue, change: filteredData[x].change, change2: filteredData2[x].change} );};
 				};
 				return chartDataValue;
+			},
+			htmlHeaderCode: function () {
+				return 		'<div class="col-lg-5 col-md-6 col-xs-12"> \
+								<div class="info-box"> \
+									<span class="info-box-icon bg-grey"></span> \
+									<div class="info-box-content"> \
+										<span class="info-box-number">' + this.company + ' (' + this.code + ') </span> \
+										<span class="info-box-text">Tipo de activo: ' + this.assetType + ' </span> \
+										<span class="info-box-text">Industria: ' + this.industry + ', ' + this.subIndustry + ' </span> \
+									</div> \
+								</div> \
+							</div>';
 			}
 		}
 	};
@@ -632,12 +658,13 @@ var setStock = function (code) {
 
 var setStock2 = function (code) {
 	if (code == 'nan') {
-		stock2 = {code: 'nan'}
+		stock2 = {code: 'nan', htmlHeaderCode: function () {return '';} }
 		return;
 	};
 	if (code == 'ypfd.ba') {
 		stock2 = {
 			code: 'ypfd.ba',
+			assetType: 'Acción',
 			company: 'YPF S.A.',
 			industry: 'Energía',
 			subIndustry: 'Petróleo',
@@ -901,11 +928,24 @@ var setStock2 = function (code) {
 				{date: '2015-4-14', close: 375.5, change: 0.67, volume: 82100},
 				{date: '2015-4-15', close: 374.5, change: -0.27, volume: 126300},
 				{date: '2015-4-17', close: 361.5, change: -3.47, volume: 68300}
-			]
+			],
+			htmlHeaderCode: function () {
+				return 		'<div class="col-lg-5 col-md-6 col-xs-12"> \
+								<div class="info-box"> \
+									<span class="info-box-icon bg-blue"><span class="info-box-number">Vs. </span></span> \
+									<div class="info-box-content"> \
+										<span class="info-box-number">' + this.company + ' (' + this.code + ') </span> \
+										<span class="info-box-text">Tipo de activo: ' + this.assetType + ' </span> \
+										<span class="info-box-text">Industria: ' + this.industry + ', ' + this.subIndustry + ' </span> \
+									</div> \
+								</div> \
+							</div>';
+			}
 		}
 	} else {
 		stock2 = {
 			code: 'apbr.ba',
+			assetType: 'Acción',
 			company: 'Petróleo Brasileiro S.A',
 			industry: 'Energía',
 			subIndustry: 'Petróleo',
@@ -1169,7 +1209,19 @@ var setStock2 = function (code) {
 				{date: '2015-4-14', close: 49.65, change: 4.2, volume: 758800},
 				{date: '2015-4-15', close: 52.7, change: 6.14, volume: 1179000},
 				{date: '2015-4-17', close: 52.25, change: -0.85, volume: 1234100}
-			]
+			],
+			htmlHeaderCode: function () {
+				return 		'<div class="col-lg-5 col-md-6 col-xs-12"> \
+								<div class="info-box"> \
+									<span class="info-box-icon bg-blue"><span class="info-box-number">Vs. </span></span> \
+									<div class="info-box-content"> \
+										<span class="info-box-number">' + this.company + ' (' + this.code + ') </span> \
+										<span class="info-box-text">Tipo de activo: ' + this.assetType + ' </span> \
+										<span class="info-box-text">Industria: ' + this.industry + ', ' + this.subIndustry + ' </span> \
+									</div> \
+								</div> \
+							</div>';
+			}
 		}
 	};
 };
@@ -1235,6 +1287,7 @@ var reloadLines = function () {
 
 	$('#value-drop-down')[0].value == 'close' ? $('#assets-drop-down')[0].value = 'nan' : $('#assets-drop-down')[0].value = $('#assets-drop-down')[0].value; 
 	setStock2($('#assets-drop-down')[0].value);
+	$('#header-row')[0].innerHTML = stock.htmlHeaderCode() + stock2.htmlHeaderCode();
 
 	loadLines(startDate, endDate);
 

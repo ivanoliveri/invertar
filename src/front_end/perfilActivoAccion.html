@@ -173,8 +173,30 @@
 
 			<!-- Main content -->
 			<section class="content">
+				<div class="row" id="header-row">
+					<div class="col-lg-5 col-md-6 col-xs-12">
+						<div class="info-box">
+							<span class="info-box-icon bg-grey"></span>
+							<div class="info-box-content">
+								<span class="info-box-number">YPF (ypfd.ba) </span>
+								<span class="info-box-text">Tipo de activo: Acción </span>
+								<span class="info-box-text">Industria: Energía, Petróleo </span>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-5 col-md-6 col-xs-12">
+						<div class="info-box">
+							<span class="info-box-icon bg-blue"><span class="info-box-number">Vs. </span></span>
+							<div class="info-box-content">
+								<span class="info-box-number">YPF (ypfd.ba) </span>
+								<span class="info-box-text">Tipo de activo: Acción </span>
+								<span class="info-box-text">Industria: Energía, Petróleo </span>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="row">
-					<div class = "col-lg-3 col-md-4 col-sm-6 col-xs-12">
+					<div class = "col-lg-4 col-md-4 col-sm-6 col-xs-12">
 						<label>Ver Fechas </label>
 						<div class="form-group">
 							<div class="input-group">
@@ -185,7 +207,7 @@
 							</div><!-- /.input group -->
 						</div><!-- /.form group -->
 					</div>
-					<div class = "col-lg-2 col-md-4 col-sm-3 col-xs-6">
+					<div class = "col-lg-3 col-md-4 col-sm-3 col-xs-6">
 						<label>Ver </label>
 						<div class="form-group">
 							<select class="form-control" id="value-drop-down" onchange="reloadLines();">
@@ -194,7 +216,7 @@
 							</select>
 						</div>
 					</div>
-					<div class = "col-lg-2 col-md-4 col-sm-3 col-xs-6">
+					<div class = "col-lg-3 col-md-4 col-sm-3 col-xs-6">
 						<label>Comparar con </label>
 						<div class="form-group">
 							<select class="form-control" id="assets-drop-down" onchange="if ($('#assets-drop-down')[0].value != 'nan') {$('#value-drop-down')[0].value = 'change'}; reloadLines();">
