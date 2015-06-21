@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>InvertAR</title>
+		<title>InvertAR | Perfil de activo</title>
 		<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 		<!-- Bootstrap 3.3.2 -->
 		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />    
@@ -290,7 +290,7 @@
 
 		<!--MLG data load-->
 		<script src="urlParametersRead.js" type="text/javascript"></script>
-		<script src="perfilActivoAccion.js" type="text/javascript"></script>
+		<script src="perfilActivo.js" type="text/javascript"></script>
 
 		<!-- InputMask -->
 		<script src="plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
@@ -344,7 +344,7 @@
 
 			innHTML = '<option value=nan>- </option>'
 			assets = $.map(assetsList.sort(), function (x) {return '<option value=' + x + '>' + x + ' </option>';});
-			for (a in assets) {if (assetsList[a] != parameters.stock) {innHTML = innHTML + assets[a];} }
+			for (a in assets) {if (assetsList[a] != parameters.asset) {innHTML = innHTML + assets[a];} }
 			$('#assets-drop-down')[0].innerHTML = innHTML;
 
 			stockChange();

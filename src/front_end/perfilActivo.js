@@ -1,11 +1,11 @@
 var assetsList = ['ypfd.ba', 'apbr.ba', 'ts.ba', 'teco2.ba', 'fran.ba', 'bma.ba', 'erar.ba', 'alua.ba', 'ggal.ba', 'bpat.ba', 'gcla.ba', 'pesa.ba', 'irsa.ba', 'apsa.ba', 'moli.ba', 'pamp.ba', 'ctio.ba', 'tgsu2.ba', 'bhip.ba', 'cres.ba', 'pata.ba', 'cepu2.ba', 'come.ba', 'edn.ba', 'lede.ba', 'jmin.ba', 'ceco2.ba', 'petr.ba', 'brio.ba', 'sami.ba', 'tef.ba', 'capx.ba', 'rigo.ba', 'invj.ba', 'tgno4.ba', 'esme.ba', 'indu.ba', 'gban.ba', 'bolt.ba', 'cgpa2.ba', 'mirg.ba', 'tran.ba', 'ferr.ba', 'metr.ba', 'celu.ba', 'paty.ba', 'tglt.ba', 'oest.ba', 'cado.ba', 'std.ba', 'grim.ba', 'capu.ba', 'dyca.ba', 'intr.ba', 'rep.ba', 'long.ba', 'auso.ba', 'carc.ba', 'semi.ba', 'rose.ba', 'estr.ba', 'colo.ba', 'psur.ba', 'fipl.ba', 'garo.ba', 'agro.ba', 'poll.ba', 'mori.ba']
 
-var stock;
-var stock2;
+var asset;
+var asset2;
 
-var setStock = function (code) {
+var setAsset = function (code) {
 	if (code == 'ypfd.ba') {
-		stock = {
+		asset = {
 			code: 'ypfd.ba',
 			assetType: 'Acción',
 			company: 'YPF S.A.',
@@ -329,7 +329,7 @@ var setStock = function (code) {
 			}
 		}
 	} else {
-		stock = {
+		asset = {
 			code: 'apbr.ba',
 			assetType: 'Acción',
 			company: 'Petróleo Brasileiro S.A',
@@ -630,13 +630,13 @@ var setStock = function (code) {
 				};
 				return maxDate;
 			},
-			chartData: function (dateFrom, dateTo, stock2) {
+			chartData: function (dateFrom, dateTo, asset2) {
 				chartDataValue = [];
 				filteredData = this.dailyCloseValues.filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );
-				if (stock2.code != 'nan') {filteredData2 = stock2.dailyCloseValues.filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );;};
+				if (asset2.code != 'nan') {filteredData2 = asset2.dailyCloseValues.filter(function (x) {return new Date(x.date.split('-') ).getTime() >= new Date(dateFrom.split('-') ).getTime() && new Date(x.date.split('-') ).getTime() <= new Date(dateTo.split('-') ).getTime();} );;};
 				for (x in filteredData) {
 					dateValue = filteredData[x].date;
-					if (stock2.code == 'nan') {chartDataValue.push({date: dateValue, close: filteredData[x].close, change: filteredData[x].change});} else {chartDataValue.push({date: dateValue, change: filteredData[x].change, change2: filteredData2[x].change} );};
+					if (asset2.code == 'nan') {chartDataValue.push({date: dateValue, close: filteredData[x].close, change: filteredData[x].change});} else {chartDataValue.push({date: dateValue, change: filteredData[x].change, change2: filteredData2[x].change} );};
 				};
 				return chartDataValue;
 			},
@@ -656,13 +656,13 @@ var setStock = function (code) {
 	};
 };
 
-var setStock2 = function (code) {
+var setAsset2 = function (code) {
 	if (code == 'nan') {
-		stock2 = {code: 'nan', htmlHeaderCode: function () {return '';} }
+		asset2 = {code: 'nan', htmlHeaderCode: function () {return '';} }
 		return;
 	};
 	if (code == 'ypfd.ba') {
-		stock2 = {
+		asset2 = {
 			code: 'ypfd.ba',
 			assetType: 'Acción',
 			company: 'YPF S.A.',
@@ -943,7 +943,7 @@ var setStock2 = function (code) {
 			}
 		}
 	} else {
-		stock2 = {
+		asset2 = {
 			code: 'apbr.ba',
 			assetType: 'Acción',
 			company: 'Petróleo Brasileiro S.A',
@@ -1229,10 +1229,10 @@ var setStock2 = function (code) {
 var loadLines = function(startDate, endDate) {
 
 	document.getElementById('line-chart').innerHTML = '';
-	data = stock.chartData(startDate, endDate, stock2);
+	data = asset.chartData(startDate, endDate, asset2);
 	$('#value-drop-down')[0].value == 'close' ? ykeys = ['close'] :  ykeys = ['change'];
 	$('#assets-drop-down')[0].value != 'nan' ? ykeys = ['change', 'change2'] :  ykeys = ykeys;
-	$('#assets-drop-down')[0].value != 'nan' ? labels = [parameters.stock, $('#assets-drop-down')[0].value] :  labels = [parameters.stock];
+	$('#assets-drop-down')[0].value != 'nan' ? labels = [parameters.asset, $('#assets-drop-down')[0].value] :  labels = [parameters.asset];
 	$('#value-drop-down')[0].value == 'change' ? percentage = ' %' : percentage = '';
 
 	var line = new Morris.Line({
@@ -1262,7 +1262,7 @@ var loadLines = function(startDate, endDate) {
 					return xDate.getDate() + '/' + (xDate.getMonth() + 1) + '/' + xDate.getFullYear();
 				},
 		ymax: 'auto',
-		ymin: stock.minValue(startDate, endDate, $('#value-drop-down')[0].value) - (stock.maxValue(startDate, endDate, $('#value-drop-down')[0].value) / 4),
+		ymin: asset.minValue(startDate, endDate, $('#value-drop-down')[0].value) - (asset.maxValue(startDate, endDate, $('#value-drop-down')[0].value) / 4),
 		yLabelFormat: function (y) {return Math.round(y * 100) / 100 + '' + percentage;},
 		//events: $.map(data.filter(function (x) {return x.investment > 0 || x.capitalization > 0; } ), function (x) {return x.date; } ),
 		//eventStrokeWidth: 2,
@@ -1286,8 +1286,8 @@ var reloadLines = function () {
 	endDate = $('#date-range').val().split(' - ')[1].split('/')[2] + '-' + $('#date-range').val().split(' - ')[1].split('/')[1] + '-' + $('#date-range').val().split(' - ')[1].split('/')[0];
 
 	$('#value-drop-down')[0].value == 'close' ? $('#assets-drop-down')[0].value = 'nan' : $('#assets-drop-down')[0].value = $('#assets-drop-down')[0].value; 
-	setStock2($('#assets-drop-down')[0].value);
-	$('#header-row')[0].innerHTML = stock.htmlHeaderCode() + stock2.htmlHeaderCode();
+	setAsset2($('#assets-drop-down')[0].value);
+	$('#header-row')[0].innerHTML = asset.htmlHeaderCode() + asset2.htmlHeaderCode();
 
 	loadLines(startDate, endDate);
 
@@ -1296,11 +1296,11 @@ var reloadLines = function () {
 
 var stockChange = function () {
 
-	setStock(parameters.stock);
-	startDate = new Date(stock.minDate().split('-') );
+	setAsset(parameters.asset);
+	startDate = new Date(asset.minDate().split('-') );
 	strStartDate = startDate.getDate() + '/' + (startDate.getMonth() + 1) + '/' + startDate.getFullYear();
 
-	endDate = new Date(stock.maxDate().split('-') );
+	endDate = new Date(asset.maxDate().split('-') );
 	strEndDate = endDate.getDate() + '/' + (endDate.getMonth() + 1) + '/' + endDate.getFullYear();
 
 	$('#date-range').daterangepicker( {

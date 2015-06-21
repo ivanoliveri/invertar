@@ -24,7 +24,7 @@ var assets = {
 			stringHTML += '<tr> \
 								<td><label><input type="checkbox" name="' + element.code + '" checked="checked" onchange="reloadLines();"></input></label></td> \
 								<td>' + element.type + '</td> \
-								<td> <a href="catalogo.html">' + element.code + '</a></td> \
+								<td> <a href="perfilActivo.html?asset=' + element.code + '">' + element.code + '</a></td> \
 								<td>' + element.description + '</td> \
 								<td>' + new String(element.value).toString().replace('.', ',') + ' ARS</td> \
 								<td id="investment-' + element.code.replace('.', '-') + '"></td> \
