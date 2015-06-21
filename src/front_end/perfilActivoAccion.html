@@ -174,7 +174,7 @@
 			<!-- Main content -->
 			<section class="content">
 				<div class="row">
-					<div class = "col-lg-3 col-md-4 col-sm-5 col-xs-6">
+					<div class = "col-lg-3 col-md-4 col-sm-6 col-xs-12">
 						<label>Ver Fechas </label>
 						<div class="form-group">
 							<div class="input-group">
@@ -185,18 +185,25 @@
 							</div><!-- /.input group -->
 						</div><!-- /.form group -->
 					</div>
-					<div class = "col-lg-2 col-md-3 col-sm-4 col-xs-6">
+					<div class = "col-lg-2 col-md-4 col-sm-3 col-xs-6">
 						<label>Ver </label>
 						<div class="form-group">
 							<select class="form-control" id="value-drop-down" onchange="reloadLines();">
-								<option value=close>Valores</option>
-								<option value=change>Variaciones %</option>
+								<option value=close>Valores </option>
+								<option value=change>Variaciones % </option>
+							</select>
+						</div>
+					</div>
+					<div class = "col-lg-2 col-md-4 col-sm-3 col-xs-6">
+						<label>Comparar con </label>
+						<div class="form-group">
+							<select class="form-control" id="assets-drop-down" onchange="if ($('#assets-drop-down')[0].value != 'nan') {$('#value-drop-down')[0].value = 'change'}; reloadLines();">
 							</select>
 						</div>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-10 col-xs-12">
+					<div class="col-lg-10 col-xs-12">
 						<!--<div class="box box-solid bg-teal-gradient">-->
 						<div class="box box-solid">
 						<!--<div>-->
@@ -312,6 +319,11 @@
 			$(".timepicker").timepicker({
 			  showInputs: false
 			});
+
+			innHTML = '<option value=nan>- </option>'
+			assets = $.map(assetsList.sort(), function (x) {return '<option value=' + x + '>' + x + ' </option>';});
+			for (a in assets) {if (assetsList[a] != parameters.stock) {innHTML = innHTML + assets[a];} }
+			$('#assets-drop-down')[0].innerHTML = innHTML;
 
 			stockChange();
 		</script>
