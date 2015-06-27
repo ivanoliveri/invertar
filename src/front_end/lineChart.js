@@ -1893,7 +1893,7 @@ var portfolios = {
 			
 			{symbol: 'apbr.ba', value: 42, quantity: 250, type: 'En cartera'},
 			
-			{symbol: 'dolar.oficial', value: 8.78, quantity: 5000, type: 'Capitalizado'},
+			{symbol: 'dolar.oficial', value: 8.78, quantity: 1000, type: 'Capitalizado'},
 			
 			{symbol: 'dolar.oficial', value: 8.85, quantity: 4000, type: 'En cartera'}
 			]},
@@ -3720,7 +3720,7 @@ var portfolios = {
 			{date: '2015-4-7', transactions: [
 			{symbol: 'apbr.ba', value: 42, quantity: 800, type: 'En cartera'},
 			
-			{symbol: 'dolar.blue', value: 8.78, quantity: 5000, type: 'Capitalizado'},
+			{symbol: 'dolar.blue', value: 8.78, quantity: 1000, type: 'Capitalizado'},
 			
 			{symbol: 'dolar.blue', value: 8.85, quantity: 4000, type: 'En cartera'},
 			
