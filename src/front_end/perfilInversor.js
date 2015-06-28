@@ -116,11 +116,26 @@ var saveProfile = function() {
 	moneyFrom = $('#money-range-slider').attr('value').split(';')[1];
 	performance = $('#performance-slider').attr('value');
 	term = $('#term-slider').attr('value');
-	if (invProfile.name != '') {
+	if (invProfile.code != '') {
 		//Ajax to save changes to profile invProfile.code
 		window.location.href = 'perfilInversor.html?profile=' + invProfile.code;
 	} else {
 		//Ajax to save new profile
 		window.location.href = 'perfilInversor.html';
 	};
+};
+
+var setSaveButtonModalBody = function() {
+	replace = new Array();
+	replace['%OverwriteString%'] = invProfile.code != '' ? '<br>El pefil ' + invProfile.name + ' será sobrescrito con la siguiente información:' : '';
+	replace['%ProfileName%'] = $('#name-textbox')[0].value;
+	replace['%ProfileDescription%'] = !$('#description-textbox')[0].value ? '' : '<br><br>' + $('#description-textbox')[0].value;
+	replace['%ProfileInvestmentRange%'] = '$' + $('#money-range-slider').attr('value').split(';')[0] + ' - $' + $('#money-range-slider').attr('value').split(';')[1];
+	replace['%ProfilePerformance%'] = $('#performance-slider').attr('value') + '%';
+	replace['%ProfileTerm%'] = $('#term-slider').attr('value') + ' meses';
+	for (r in replace) {$('#save-button-modal-body')[0].innerHTML = $('#save-button-modal-body')[0].innerHTML.replace(r, replace[r] );}
+};
+
+var clearSaveButtonModalBody = function() {
+	$('#save-button-modal-body')[0].innerHTML = '¿Confirma que desea guardar su perfil de Inversor?%OverwriteString%<br><br><label>%ProfileName%</label>%ProfileDescription%<br><br>Inversión: %ProfileInvestmentRange%<br><br>Rendimiento deseado: %ProfilePerformance%<br><br>Plazo: %ProfileTerm%';
 };

@@ -215,7 +215,24 @@
 				</div>
 				<div class="row" id="buttons-row">
 					<div class="col-md-3 col-xs-6">
-						<br><br><br><button id="save-button" class="btn btn-block btn-primary disabled" onclick="saveProfile();" title="">Guardar Cambios</button>
+						<br><br><br><button id="save-button" class="btn btn-block btn-primary disabled" title="" onclick="setSaveButtonModalBody();" data-toggle="modal" data-target="#saveProfileModal">Guardar Cambios</button>
+						<div class="modal fade" id="saveProfileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="save-button-modal-title-label">Confirmar guardado de perfil</h4>
+									</div>
+									<div class="modal-body" id="save-button-modal-body">
+										¿Confirma que desea guardar su perfil de Inversor?%OverwriteString%<br><br><label>%ProfileName%</label>%ProfileDescription%<br><br>Inversión: %ProfileInvestmentRange%<br><br>Rendimiento deseado: %ProfilePerformance%<br><br>Plazo: %ProfileTerm%
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearSaveButtonModalBody();">No</button>
+										<button type="button" class="btn btn-primary" onclick="clearSaveButtonModalBody(); saveProfile();" data-dismiss="modal">Sí</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
