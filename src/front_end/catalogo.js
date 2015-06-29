@@ -1,5 +1,16 @@
 var stocksCatalogue = {
 	html: function () {
+		var filterBySearch
+		try {
+			filterBySearch = parameters.search
+		} catch(err) {/*do nothing*/};
+
+		if (!filterBySearch) {
+			htmlData = this.data
+		} else {
+			htmlData = this.data.filter(function (x) {return x.code.toUpperCase().includes(parameters.search.toUpperCase()) || x.company.toUpperCase().includes(parameters.search.toUpperCase()) || x.industry.toUpperCase().includes(parameters.search.toUpperCase()) || x.subIndustry.toUpperCase().includes(parameters.search.toUpperCase());} );
+		};
+
 		var stringHTML
 		stringHTML = '	<table id="assetsCatalogue" class="table table-bordered table-striped"> \
 							<thead> \
@@ -14,8 +25,8 @@ var stocksCatalogue = {
 							</thead> \
 							</tbody> ';
 
-		for (stockData in this.data) {
-			element = this.data[stockData]
+		for (stockData in htmlData) {
+			element = htmlData[stockData]
 			stringHTML += '<tr> \
 								<td> <a href="perfilActivo.html?asset=' + element.code + '">' + element.code + '</a></td> \
 								<td>' + element.company + '</td> \
@@ -118,6 +129,17 @@ var stocksCatalogue = {
 
 var bondsCatalogue = {
 	html: function () {
+		var filterBySearch
+		try {
+			filterBySearch = parameters.search
+		} catch(err) {/*do nothing*/};
+
+		if (!filterBySearch) {
+			htmlData = this.data
+		} else {
+			htmlData = this.data.filter(function (x) {return x.code.toUpperCase().includes(parameters.search.toUpperCase()) || x.name.toUpperCase().includes(parameters.search.toUpperCase()) || x.currency.toUpperCase().includes(parameters.search.toUpperCase());} );
+		};
+
 		var stringHTML
 		stringHTML = '	<table id="assetsCatalogue" class="table table-bordered table-striped"> \
 							<thead> \
@@ -132,8 +154,8 @@ var bondsCatalogue = {
 							</thead> \
 							</tbody> ';
 
-		for (bondData in this.data) {
-			element = this.data[bondData]
+		for (bondData in htmlData) {
+			element = htmlData[bondData]
 			stringHTML = stringHTML + '<tr> \
 										<td> <a href="perfilActivo.html?asset=' + element.code + '">' + element.code + '</a></td> \
 										<td>' + element.name + '</td> \
@@ -169,8 +191,27 @@ var bondsCatalogue = {
 };
 
 var loadTable = function (assetType) {
-	assetType=='Acciones' ? stocksCatalogue.loadTable() : bondsCatalogue.loadTable();
+	assetType == 'Acciones' ? stocksCatalogue.loadTable() : bondsCatalogue.loadTable();
 	$("#assetsCatalogue").dataTable();
 };
 
-loadTable('Acciones');
+try {
+	$('#search-string-row')[0].innerHTML = $('#search-string-row')[0].innerHTML.replace('%searchedValue%', parameters.search);
+	if (stocksCatalogue.data.filter(function (x) {return x.code.toUpperCase().includes(parameters.search.toUpperCase()) || x.company.toUpperCase().includes(parameters.search.toUpperCase()) || x.industry.toUpperCase().includes(parameters.search.toUpperCase()) || x.subIndustry.toUpperCase().includes(parameters.search.toUpperCase());} ).length > 0) {
+		parameters.search == '' ? $('#search-string-row')[0].innerHTML = '' : $('#search-string-row')[0].innerHTML = $('#search-string-row')[0].innerHTML;
+		loadTable('Acciones');
+	} else {
+		if (bondsCatalogue.data.filter(function (x) {return x.code.toUpperCase().includes(parameters.search.toUpperCase()) || x.name.toUpperCase().includes(parameters.search.toUpperCase()) || x.currency.toUpperCase().includes(parameters.search.toUpperCase() );} ).length > 0) {
+			loadTable('Bonos');
+			$('#asset-type-combobox')[0].value = 'Bonos';
+		} else {
+			$('#search-string-row')[0].innerHTML = $('#search-string-row')[0].innerHTML.replace('Resúltados de la búsqueda: ' + parameters.search, 'Sin resultados para la búsqueda de: ' + parameters.search);
+			loadTable('Acciones');
+		}
+	};
+	$('#search-textbox')[0].value = parameters.search;
+} catch(err) {
+	$('#search-string-row')[0].innerHTML = '';
+	$('#search-textbox')[0].value = '';
+	loadTable('Acciones');
+};
