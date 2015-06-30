@@ -295,6 +295,7 @@
 		<!--MLG data load-->
 		<script src="urlParametersRead.js" type="text/javascript"></script>
 		<script type="text/javascript">
+			$('#search-textbox')[0].size = 26;
 			try {
 				parameters.search != '' && !!parameters.search ? window.location.href = 'catalogo.html?search=' + parameters.search : a = 1;
 			} catch(err) {/*do nothing*/};
