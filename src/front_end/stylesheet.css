@@ -1,0 +1,11 @@
+.ionIconSize {
+    font-size: 50px;
+}
+
+#html5Form .inputContainer .form-control {
+    padding-right: 10px;
+}
+/* Adjust feedback icon position */
+#html5Form .inputContainer .form-control-feedback {
+    right: -15px;
+}
