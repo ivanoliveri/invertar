@@ -6,9 +6,9 @@ try {
 			name: 'Porfolio 1',
 			description: 'Descripción del portfolio 1. Más texto.\nMás texto, más......',
 			assets: [
-						{symbol: 'apbr.ba', quantity: 800},
-						{symbol: 'dolar.blue', quantity: 4000},
-						{symbol: 'ypfd.ba', quantity: 30}
+						{code: 'apbr.ba', quantity: 200},
+						{code: 'dolar.blue', quantity: 4000},
+						{code: 'ypfd.ba', quantity: 30}
 					]
 		};
 	} else {
@@ -16,9 +16,9 @@ try {
 			name: 'Porfolio 2',
 			description: 'Descripción del portfolio 2.\nMás texto.\nMás texto, más......',
 			assets: [
-						{symbol: 'apbr.ba', quantity: 800},
-						{symbol: 'dolar.blue', quantity: 4000},
-						{symbol: 'ypfd.ba', quantity: 30}
+						{code: 'apbr.ba', quantity: 10},
+						{code: 'dolar.blue', quantity: 4000},
+						{code: 'ypfd.ba', quantity: 30}
 					]
 		};
 	};
@@ -28,7 +28,7 @@ try {
 
 var assetsCatalogue = {
 	data: [
-		{assetType: 'Móneda Extranjera', code: 'dolar.blue', name: 'Dólar Blue', industry: '', subIndustry: '', value: 9.15, trend: 'Sin cambio', variation: 9, inPortfolio: 0},
+		{assetType: 'Móneda Extranjera', code: 'dolar.blue', name: 'Dólar Blue', industry: '', subIndustry: '', value: 13.15, trend: 'Sin cambio', variation: 9, inPortfolio: 0},
 		{assetType: 'Acción', code: 'ypfd.ba', name: 'YPF S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 112.75, trend: 'Sin cambio', variation: -21, inPortfolio: 0},
 		{assetType: 'Acción', code: 'apbr.ba', name: 'Petróleo Brasileiro S.A', industry: 'Energía', subIndustry: 'Petróleo', value: 299.3, trend: 'En baja', variation: -18, inPortfolio: 0},
 		{assetType: 'Acción', code: 'ts.ba', name: 'Tenaris S.A.', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 170.62, trend: 'En baja', variation: 2, inPortfolio: 0},
@@ -101,14 +101,20 @@ var assetsCatalogue = {
 	assetBox: function(asset, action) {
 		ast = this.data.filter(function (x) {return x.code == asset;})[0];
 		if (action == 'add') {
-			sign = 'plus';
-			toolTip = "Agregar a porfolio";
-			func = 'addAsset';
-		} else {
-			sign = 'minus';
-			toolTip = "Quitar de porfolio";
-			func = 'removeAsset';
-		}
+			sign = 'plus-round';
+			toolTip = 'Agregar a porfolio';
+			onClick = 'addAsset(\'' + ast.code + '\', 0);';
+		};
+		if (action == 'remove') {
+			sign = 'minus-round';
+			toolTip = 'Quitar de porfolio';
+			onClick = 'removeAsset(\'' + ast.code + '\');';
+		};
+		if (action == 'locked') {
+			sign = 'locked';
+			toolTip = 'Activo en porfolio, no puede quitarse';
+			onClick = '';
+		};
 		if (ast) {
 			return '	<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"> \
 							<div class="small-box" id="' + ast.code.replace('.', '') + '-box" data-toggle="tooltip" title="' + ast.assetType + ' - ' + ast.code + '<br>' + ast.name + '<br>$' + ast.value + ' - ' + ast.trend + '<br>" data-placement="bottom"> \
@@ -118,7 +124,7 @@ var assetsCatalogue = {
 									<p>' + ast.variation + '%</p> \
 								</div> \
 								<div class="icon"> \
-									<i class="ion ion-' + sign + '-round ionIconSize" title="' + toolTip + '" data-placement="top" onclick="' + func + '(\'' + ast.code + '\');""></i> <!--close-round--> \
+									<i class="ion ion-' + sign + ' ionIconSize" title="' + toolTip + '" data-placement="top" onclick="' + onClick + '"></i> <!--close-round--> \
 								</div> \
 								<a href="perfilActivo.html?asset=' + ast.code + '" class="small-box-footer">Ir a perfil activo <i class="fa fa-arrow-circle-right"></i></a> \
 							</div> \
@@ -172,67 +178,6 @@ var assetsCatalogue = {
 	}
 };
 
-var addAsset = function(asset) {
-	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
-	$('#' + asset.replace('.', '') + '-box').parent().remove();
-	$('#assets-added-row')[0].innerHTML += '<div class="row"><div class="col-xs-12">' + assetsCatalogue.assetBox(asset, 'remove') + '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"><div class="inputContainer"> \
-							<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\'); if(this.value < 0) {this.value = 0; $(\'#\' + this.id.replace(\'-qty\', \'-value\') )[0].innerHTML = 0;} else {this.value = this.value;}"/> \
-							</div> \
-							<br><label>Valor: $</label><label class="value-label" id="' + asset.replace('.', '') + '-value">0</label></div><div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"></div></div></div>';
-	toolTips();
-	colorBoxes();
-};
-
-var updateInvestedValue = function() {
-	totalInv = 0;
-	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML) >= 0 ? parseFloat(this.innerHTML) : 0;} );
-	$('#invested-label')[0].innerHTML = 'Invertido: $' + totalInv;
-
-	totalInv <= 200000? $('#assets-in-portfolio-callout').attr('class', 'callout callout-success') : $('#assets-in-portfolio-callout').attr('class', 'callout callout-danger');
-	allowSaving();
-};
-
-var updateValue = function(asset) {
-	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset)*100)/100;
-
-	updateInvestedValue();
-};
-
-var removeAsset = function(asset) {
-	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
-	$('#' + asset.replace('.', '') + '-box').parent().parent().parent().remove();
-	$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add', $.map(assetsCatalogue.assetsInPortfolio(), function(x) {return x.code;}) );
-	toolTips();
-	colorBoxes();
-	updateInvestedValue();
-};
-
-var toolTips = function() {
-	$('.small-box').tooltip({html: true});
-	$('.ion').tooltip({html: true});
-};
-
-var colorBoxes = function () {
-	for (a in assetsCatalogue.data) {$('#' + assetsCatalogue.data[a].code.replace('.', '') + '-box').css('background-color', assetsCatalogue.varColor(assetsCatalogue.data[a].code) );};
-};
-
-var setPage = function() {
-	!portfolio ? $('#name-textbox')[0].value = '' : $('#name-textbox')[0].value = portfolio.name;
-	!portfolio ? $('#description-textbox')[0].value = '' : $('#description-textbox')[0].value = portfolio.description;
-	toolTips();
-	colorBoxes();
-};
-
-var resetPage = function() {
-	discardPortfolio();
-	setPage();
-};
-
-assetsCatalogue.data.sort(function (a, b) {return b.variation - a.variation;})
-$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add');
-setPage();
-
-
 //Saving functiona
 var allowSaving = function() {
 	if (!$("#name-textbox")[0].value | $('#assets-in-portfolio-callout').attr('class') == 'callout callout-danger') {
@@ -274,3 +219,75 @@ var discardPortfolio = function() {
 	};
 	window.location.href = 'portfolio.html' + portfolioValue;
 };
+
+//Asset add/remove functions
+var addAsset = function(asset, locked) {
+	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
+	$('#' + asset.replace('.', '') + '-box').parent().remove();
+	locked == 1 ? action = 'locked' : action = 'remove';
+	$('#assets-added-row')[0].innerHTML += '<div class="row"><div class="col-xs-12">' + assetsCatalogue.assetBox(asset, action) + '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"><div class="inputContainer"> \
+							<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\'); if(this.value < 0) {this.value = 0; $(\'#\' + this.id.replace(\'-qty\', \'-value\') )[0].innerHTML = 0;} else {this.value = this.value;}"/> \
+							</div> \
+							<br><label>Valor: $</label><label class="value-label" id="' + asset.replace('.', '') + '-value">0</label></div><div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"></div></div></div>';
+	toolTips();
+	colorBoxes();
+};
+
+var removeAsset = function(asset) {
+	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
+	$('#' + asset.replace('.', '') + '-box').parent().parent().parent().remove();
+	$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add', $.map(assetsCatalogue.assetsInPortfolio(), function(x) {return x.code;}) );
+	toolTips();
+	colorBoxes();
+	updateInvestedValue();
+};
+
+var updateInvestedValue = function() {
+	totalInv = 0;
+	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML) >= 0 ? parseFloat(this.innerHTML) : 0;} );
+	$('#invested-label')[0].innerHTML = 'Invertido: $' + totalInv;
+
+	totalInv <= 200000? $('#assets-in-portfolio-callout').attr('class', 'callout callout-success') : $('#assets-in-portfolio-callout').attr('class', 'callout callout-danger');
+	allowSaving();
+};
+
+var updateValue = function(asset) {
+	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset)*100)/100;
+
+	updateInvestedValue();
+};
+
+var toolTips = function() {
+	$('.small-box').tooltip({html: true});
+	$('.ion').tooltip({html: true});
+};
+
+var colorBoxes = function () {
+	for (a in assetsCatalogue.data) {$('#' + assetsCatalogue.data[a].code.replace('.', '') + '-box').css('background-color', assetsCatalogue.varColor(assetsCatalogue.data[a].code) );};
+};
+
+var setPage = function() {
+	!portfolio ? $('#name-textbox')[0].value = '' : $('#name-textbox')[0].value = portfolio.name;
+	!portfolio ? $('#description-textbox')[0].value = '' : $('#description-textbox')[0].value = portfolio.description;
+	if (portfolio) {
+		for (ass in portfolio.assets) {
+			addAsset(portfolio.assets[ass].code, 1);
+		};
+		for (ass in portfolio.assets) {
+			$('#' + portfolio.assets[ass].code.replace('.', '') + '-qty')[0].value = portfolio.assets[ass].quantity;
+			updateValue(portfolio.assets[ass].code);
+		};
+		updateInvestedValue();
+	};
+	toolTips();
+	colorBoxes();
+};
+
+var resetPage = function() {
+	discardPortfolio();
+	setPage();
+};
+
+assetsCatalogue.data.sort(function (a, b) {return b.variation - a.variation;})
+$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add');
+setPage();
