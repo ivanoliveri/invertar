@@ -85,6 +85,7 @@ var assetsCatalogue = {
 							<div class="small-box" id="' + ast.code.replace('.', '') + '-box" data-toggle="tooltip" title="' + ast.assetType + ' - ' + ast.code + '<br>' + ast.name + '<br>$' + ast.value + ' - ' + ast.trend + '<br>" data-placement="bottom"> \
 								<div class="inner"> \
 									<h3>' + ast.code + '</h3> \
+									<h4> $' + ast.value + '</h5> \
 									<p>' + ast.variation + '%</p> \
 								</div> \
 								<div class="icon"> \
@@ -162,7 +163,7 @@ var updateInvestedValue = function() {
 };
 
 var updateValue = function(asset) {
-	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset);
+	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset)*100)/100;
 
 	updateInvestedValue();
 };
