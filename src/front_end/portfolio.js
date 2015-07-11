@@ -1,5 +1,34 @@
+var portfolio;
+
+try {
+	if (parameters.portfolio == 'porfolio1') {
+		portfolio = {
+			name: 'Porfolio 1',
+			description: 'Descripción del portfolio 1. Más texto.\nMás texto, más......',
+			assets: [
+						{symbol: 'apbr.ba', quantity: 800},
+						{symbol: 'dolar.blue', quantity: 4000},
+						{symbol: 'ypfd.ba', quantity: 30}
+					]
+		};
+	} else {
+		portfolio = {
+			name: 'Porfolio 2',
+			description: 'Descripción del portfolio 2.\nMás texto.\nMás texto, más......',
+			assets: [
+						{symbol: 'apbr.ba', quantity: 800},
+						{symbol: 'dolar.blue', quantity: 4000},
+						{symbol: 'ypfd.ba', quantity: 30}
+					]
+		};
+	};
+} catch(err) {
+	//do nothing
+};
+
 var assetsCatalogue = {
 	data: [
+		{assetType: 'Móneda Extranjera', code: 'dolar.blue', name: 'Dólar Blue', industry: '', subIndustry: '', value: 9.15, trend: 'Sin cambio', variation: 9, inPortfolio: 0},
 		{assetType: 'Acción', code: 'ypfd.ba', name: 'YPF S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 112.75, trend: 'Sin cambio', variation: -21, inPortfolio: 0},
 		{assetType: 'Acción', code: 'apbr.ba', name: 'Petróleo Brasileiro S.A', industry: 'Energía', subIndustry: 'Petróleo', value: 299.3, trend: 'En baja', variation: -18, inPortfolio: 0},
 		{assetType: 'Acción', code: 'ts.ba', name: 'Tenaris S.A.', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 170.62, trend: 'En baja', variation: 2, inPortfolio: 0},
@@ -147,7 +176,7 @@ var addAsset = function(asset) {
 	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
 	$('#' + asset.replace('.', '') + '-box').parent().remove();
 	$('#assets-added-row')[0].innerHTML += '<div class="row"><div class="col-xs-12">' + assetsCatalogue.assetBox(asset, 'remove') + '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"><div class="inputContainer"> \
-							<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\')"/> \
+							<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\'); if(this.value < 0) {this.value = 0; $(\'#\' + this.id.replace(\'-qty\', \'-value\') )[0].innerHTML = 0;} else {this.value = this.value;}"/> \
 							</div> \
 							<br><label>Valor: $</label><label class="value-label" id="' + asset.replace('.', '') + '-value">0</label></div><div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"></div></div></div>';
 	toolTips();
@@ -156,10 +185,11 @@ var addAsset = function(asset) {
 
 var updateInvestedValue = function() {
 	totalInv = 0;
-	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML);} );
+	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML) >= 0 ? parseFloat(this.innerHTML) : 0;} );
 	$('#invested-label')[0].innerHTML = 'Invertido: $' + totalInv;
 
-	totalInv <= 200000 ? $('#assets-in-portfolio-callout').attr('class', 'callout callout-success') : $('#assets-in-portfolio-callout').attr('class', 'callout callout-danger');
+	totalInv <= 200000? $('#assets-in-portfolio-callout').attr('class', 'callout callout-success') : $('#assets-in-portfolio-callout').attr('class', 'callout callout-danger');
+	allowSaving();
 };
 
 var updateValue = function(asset) {
@@ -187,8 +217,8 @@ var colorBoxes = function () {
 };
 
 var setPage = function() {
-	$('#name-textbox')[0].value = ''
-	$('#description-textbox')[0].value = ''
+	!portfolio ? $('#name-textbox')[0].value = '' : $('#name-textbox')[0].value = portfolio.name;
+	!portfolio ? $('#description-textbox')[0].value = '' : $('#description-textbox')[0].value = portfolio.description;
 	toolTips();
 	colorBoxes();
 };
@@ -205,9 +235,8 @@ setPage();
 
 //Saving functiona
 var allowSaving = function() {
-	if (!$("#name-textbox")[0].value) {
+	if (!$("#name-textbox")[0].value | $('#assets-in-portfolio-callout').attr('class') == 'callout callout-danger') {
 		$("#save-button").attr('class', $("#save-button").attr('class').includes(' disabled') ? $("#save-button").attr('class') : $("#save-button").attr('class') + ' disabled');
-		$("#save-button").attr('title', 'El nombre del perfil deben ser ingresados antes de guardar');
 	} else {
 		$("#save-button").attr('class', $("#save-button").attr('class').includes(' disabled') ? $("#save-button").attr('class').replace(' disabled', '') : $("#save-button").attr('class') );
 		$("#save-button").attr('title', 'Click para guardar');
