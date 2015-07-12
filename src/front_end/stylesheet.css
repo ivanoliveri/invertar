@@ -2,6 +2,21 @@
     font-size: 50px;
 }
 
+.label-buy {
+	font-size: 16px;
+    color: #970404;
+}
+
+.label-sell {
+	font-size: 16px;
+    color: #118707;
+}
+
+.label-regular {
+	font-size: 16px;
+	color: black;
+}
+
 #html5Form .inputContainer .form-control {
     padding-right: 10px;
 }

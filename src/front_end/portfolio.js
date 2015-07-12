@@ -225,10 +225,29 @@ var addAsset = function(asset, locked) {
 	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
 	$('#' + asset.replace('.', '') + '-box').parent().remove();
 	locked == 1 ? action = 'locked' : action = 'remove';
-	$('#assets-added-row')[0].innerHTML += '<div class="row"><div class="col-xs-12">' + assetsCatalogue.assetBox(asset, action) + '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"><div class="inputContainer"> \
-							<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\'); if(this.value < 0) {this.value = 0; $(\'#\' + this.id.replace(\'-qty\', \'-value\') )[0].innerHTML = 0;} else {this.value = this.value;}"/> \
-							</div> \
-							<br><label>Valor: $</label><label class="value-label" id="' + asset.replace('.', '') + '-value">0</label></div><div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"></div></div></div>';
+	locked == 1 ? buySaleLabels = '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"> \
+											<label id="' + asset.replace('.', '') + '-sell-buy-label" class="label-regular">Sin cambios</label> \
+											<label id="' + asset.replace('.', '') + '-qty-diff-label" class="label-regular"></label> \
+											<br><br><label id="' + asset.replace('.', '') + '-diff-label" class="label-regular">Valor: $</label> \
+											<label id="' + asset.replace('.', '') + '-value-diff-label" class="label-regular">0</label> \
+										</div> \
+										<div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"> \
+										</div>' : buySaleLabels = '<div class="col-lg-10 col-md-9 col-sm-8 col-xs-6"> \
+										</div>';
+
+	$('#assets-added-row')[0].innerHTML += ' \
+								<div class="row"> \
+									<div class="col-xs-12">' + assetsCatalogue.assetBox(asset, action) + ' \
+										<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"> \
+											<div class="inputContainer"> \
+												<input id ="' + asset.replace('.', '') + '-qty" class="qty-form-control" name="number" type="number" onchange="updateValue(\'' + asset + '\'); if(this.value < 0) {this.value = 0; $(\'#\' + this.id.replace(\'-qty\', \'-value\') )[0].innerHTML = 0;} else {this.value = this.value;}"/> \
+											</div> \
+											<br><label>Valor: $</label> \
+											<label class="value-label" id="' + asset.replace('.', '') + '-value">0</label> \
+										</div>'
+										+ buySaleLabels +
+									'</div> \
+								</div>';
 	toolTips();
 	colorBoxes();
 };
@@ -253,6 +272,37 @@ var updateInvestedValue = function() {
 
 var updateValue = function(asset) {
 	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset)*100)/100;
+
+	try {
+		adjValue = $('#' + asset.replace('.', '') + '-qty')[0].value >= 0 ? $('#' + asset.replace('.', '') + '-qty')[0].value : 0;
+		qtyDiff = adjValue - portfolio.assets.filter(function (x) {return x.code == asset;})[0].quantity;
+		sellBuy = qtyDiff > 0 ? 'buy' : qtyDiff < 0 ? 'sell' : '';
+		if (sellBuy == 'buy') {
+			$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Comprar ';
+		} else {
+			if (sellBuy == 'sell') {
+				$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Vender ';
+			} else {
+				$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Sin cambios';
+			}
+		};
+		$('#' + asset.replace('.', '') + '-qty-diff-label')[0].innerHTML = qtyDiff != 0 ? Math.abs(qtyDiff) : '';
+		$('#' + asset.replace('.', '') + '-value-diff-label')[0].innerHTML = Math.round(Math.abs(qtyDiff * assetsCatalogue.assetValue(asset) * 100) ) / 100;
+	} catch(err) {
+		//do nothing
+	};
 
 	updateInvestedValue();
 };
