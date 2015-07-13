@@ -179,8 +179,8 @@
 
 			<!-- Main content -->
 			<section class="content">
-				<div class="row">
-					<div class="col-md-3 col-xs-6">
+				<div class="row" id="buttons-row">
+					<div class="col-md-3 col-xs-4">
 						<button id="save-button" class="btn btn-block btn-success disabled" title="" onclick="setSaveButtonModalBody();" data-toggle="modal" data-target="#savePorfolioModal">Guardar</button><br>
 						<div class="modal fade" id="savePorfolioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 							<div class="modal-dialog" role="document">
@@ -190,7 +190,7 @@
 										<h4 class="modal-title" id="save-button-modal-title-label">Confirmar guardado de porfolio</h4>
 									</div>
 									<div class="modal-body" id="save-button-modal-body">
-										¿Confirma que desea guardar su porfolio?%OverwriteString%
+										%OverwriteString%
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearSaveButtonModalBody();">No</button>
@@ -201,8 +201,8 @@
 						</div>
 					</div>
 
-					<div class="col-md-3 col-xs-6">
-						<button id="save-button" class="btn btn-block btn-danger" title="" data-toggle="modal" data-target="#discardChangesModal">Descartar Cambios</button><br>
+					<div class="col-md-3 col-xs-4">
+						<button id="discard-changes-button" class="btn btn-block btn-danger" title="Descartar cambios en porfolio" data-toggle="modal" data-target="#discardChangesModal">Descartar Cambios</button><br>
 						<div class="modal fade" id="discardChangesModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 							<div class="modal-dialog" role="document">
 								<div class="modal-content">
@@ -221,9 +221,10 @@
 							</div>
 						</div>
 					</div>
+
 				</div>
 				<div class="row">
-					<div class="col-md-6 col-xs-12">
+					<div class="col-md-9 col-xs-12">
 						<div class="form-group">
 							<label>Nombre (*campo obligatorio)</label>
 							<input id="name-textbox" type="text" class="form-control" placeholder="Ingrese nombre del perfil del porfolio ..." onchange="allowSaving();" onkeyup="allowSaving();"/>
@@ -231,7 +232,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6 col-xs-12">
+					<div class="col-md-9 col-xs-12">
 						<div class="form-group">
 							<label>Descripción </label>
 							<textarea id="description-textbox" class="form-control" rows="3" placeholder="Ingrese una descricpción del porfolio ..." onchange="allowSaving();" onkeyup="allowSaving();"></textarea>

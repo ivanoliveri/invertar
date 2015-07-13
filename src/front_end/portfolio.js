@@ -3,6 +3,7 @@ var portfolio;
 try {
 	if (parameters.portfolio == 'porfolio1') {
 		portfolio = {
+			code: 'porfolio1',
 			name: 'Porfolio 1',
 			description: 'Descripción del portfolio 1. Más texto.\nMás texto, más......',
 			assets: [
@@ -13,6 +14,7 @@ try {
 		};
 	} else {
 		portfolio = {
+			code: 'porfolio2',
 			name: 'Porfolio 2',
 			description: 'Descripción del portfolio 2.\nMás texto.\nMás texto, más......',
 			assets: [
@@ -169,11 +171,27 @@ var assetsCatalogue = {
 		return assetsCatalogue.data.filter(function(x) {return x.inPortfolio == 1;});
 	},
 	assetValue: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset;})[0];
+		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
 		if (ast) {
 			return ast.value;
 		} else {
 			return 0;
+		};
+	},
+	assetCode: function(asset) {
+		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
+		if (ast) {
+			return ast.code;
+		} else {
+			return;
+		};
+	},
+	assetType: function(asset) {
+		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
+		if (ast) {
+			return ast.assetType;
+		} else {
+			return;
 		};
 	}
 };
@@ -190,23 +208,62 @@ var allowSaving = function() {
 
 //Save modal functions
 var savePortfolio = function() {
-	// if (invProfile.code != '') {
-		//Ajax to save changes to profile invProfile.code
-		// window.location.href = 'perfilInversor.html?profile=' + invProfile.code;
-	// } else {
-		//Ajax to save new profile
-		// window.location.href = 'perfilInversor.html';
-	// };
+	if (portfolio) {
+		//Ajax to save changes to portfolio
+		window.location.href = 'portfolio.html?portfolio=' + portfolio.code;
+	} else {
+		//Ajax to save new portfolio
+		window.location.href = 'portfolio.html';
+	};
 };
 
 var setSaveButtonModalBody = function() {
 	replace = new Array();
-	replace['%OverwriteString%'] = '<br><br>%OverwriteString%';
+	!portfolio
+		? replace['%OverwriteString%'] = '<br><br>¿Confirma la creación del portfolio <b>%name%</b>?%description%<br><br>Valor total: <b>%invested%</b><br><br>Con la siguiente composición: <br><br>%assetsInPortfolio%'
+		: replace['%OverwriteString%'] = '<br><br>¿Confirma las modificaciones sobre el portfolio <b>%origName%</b>?<br><br>Nombre: <b>%name%</b>%description%<br><br>Valor total: <b>%invested%</b>%purchases%%sales%<br><br>Resultando la siguiente composición final: <br><br>%assetsInPortfolio%';
+
+	replace['%origName%'] = portfolio ? portfolio.name : '';
+	replace['%name%'] = $('#name-textbox')[0].value;
+	replace['%description%'] = $('#description-textbox')[0].value != '' ? '<br><br>' + $('#description-textbox')[0].value : '';
+	replace['%invested%'] = $('#invested-label')[0].innerHTML.replace('Invertido: ', '');
+
+	purchasesStr = '<br><br><b>Compras</b><br>';
+	purchasesTotal = 0;
+	newPurchasedAssets = $.map(assetsCatalogue.assetsInPortfolio(), function (x) {return x.code;}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.code;}).indexOf(x) == -1;});
+	purchases = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';}).concat($.map(newPurchasedAssets, function (x) {return assetsCatalogue.assetType(x) + ' <b>' + x + '</b>, <b>' + $('#' + x.replace('.', '') + '-qty')[0].value + '</b> unidades por <b>$' + $('#' + x.replace('.', '') + '-value')[0].innerHTML + '</b><br>';}) );
+	purchaseValues = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;}).concat($.map(newPurchasedAssets, function (x) {return Math.round(parseFloat($('#' + x.replace('.', '') + '-value')[0].innerHTML) * 100) / 100;}));
+	for (p in purchases) {
+		purchasesStr += purchases[p];
+		purchasesTotal += purchaseValues[p];
+	};
+	purchasesStr == '<br><br><b>Compras</b><br>' ? purchasesStr = '' : purchasesStr = '<font color="#970404">' + purchasesStr + 'Total: <b>' + Math.round(purchasesTotal * 100) / 100 + '</b></font>';
+	replace['%purchases%'] = purchasesStr;
+
+
+	salesStr = '<br><br><b>Ventas</b><br>';
+	salesTotal = 0;
+	sales = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';});
+	saleValues = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;});
+	for (s in sales) {
+		salesStr += sales[s];
+		salesTotal += saleValues[s];
+	};
+	salesStr == '<br><br><b>Ventas</b><br>' ? salesStr = '' : salesStr = '<font color="#118707">' + salesStr + 'Total: <b>' + Math.round(salesTotal * 100) / 100 + '</b></font>';
+	replace['%sales%'] = salesStr;
+
+	assetsInPortfolioStr = '';
+	assetsInPortfolio = $.map($('.value-label') , function (x) {return assetsCatalogue.assetType(x.id.replace('-value', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-value', '') ) + '</b>, <b>' + $('#' + x.id.replace('-value', '-qty') )[0].value + '</b> unidades por <b>$' + x.innerHTML + '</b><br>';});
+	for (a in assetsInPortfolio) {
+		assetsInPortfolioStr += assetsInPortfolio[a];
+	};
+	replace['%assetsInPortfolio%'] = assetsInPortfolioStr;
+
 	for (r in replace) {$('#save-button-modal-body')[0].innerHTML = $('#save-button-modal-body')[0].innerHTML.replace(r, replace[r] );}
 };
 
 var clearSaveButtonModalBody = function() {
-	$('#save-button-modal-body')[0].innerHTML = '¿Confirma que desea guardar su perfil de Inversor?%OverwriteString%'
+	$('#save-button-modal-body')[0].innerHTML = '%OverwriteString%'
 };
 
 //Dscard functions
@@ -222,14 +279,18 @@ var discardPortfolio = function() {
 
 //Asset add/remove functions
 var addAsset = function(asset, locked) {
+	//Store current quantities for assets to load back after new asset addition
+	formIds = $.map($('.qty-form-control'), function (x) {return x.id;});
+	formValues = $.map($('.qty-form-control'), function (x) {return x.value;});
+
 	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
 	$('#' + asset.replace('.', '') + '-box').parent().remove();
 	locked == 1 ? action = 'locked' : action = 'remove';
 	locked == 1 ? buySaleLabels = '<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"> \
 											<label id="' + asset.replace('.', '') + '-sell-buy-label" class="label-regular">Sin cambios</label> \
-											<label id="' + asset.replace('.', '') + '-qty-diff-label" class="label-regular"></label> \
+											<label id="' + asset.replace('.', '') + '-qty-diff-label" class="sell-buy-qty-label label-regular"></label> \
 											<br><br><label id="' + asset.replace('.', '') + '-diff-label" class="label-regular">Valor: $</label> \
-											<label id="' + asset.replace('.', '') + '-value-diff-label" class="label-regular">0</label> \
+											<label id="' + asset.replace('.', '') + '-value-diff-label" class="sell-buy-value-label label-regular">0</label> \
 										</div> \
 										<div class="col-lg-8 col-md-6 col-sm-4 col-xs-0"> \
 										</div>' : buySaleLabels = '<div class="col-lg-10 col-md-9 col-sm-8 col-xs-6"> \
@@ -250,6 +311,9 @@ var addAsset = function(asset, locked) {
 								</div>';
 	toolTips();
 	colorBoxes();
+
+	//Load back pre-existing assets quantities stored previously in this function
+	for (x in formIds) {$('#' + formIds[x])[0].value = formValues[x];}
 };
 
 var removeAsset = function(asset) {
@@ -263,15 +327,15 @@ var removeAsset = function(asset) {
 
 var updateInvestedValue = function() {
 	totalInv = 0;
-	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML) >= 0 ? parseFloat(this.innerHTML) : 0;} );
-	$('#invested-label')[0].innerHTML = 'Invertido: $' + totalInv;
+	$('.value-label').each(function() {totalInv += parseFloat(this.innerHTML) >= 0 ? Math.round(parseFloat(this.innerHTML) * 100) / 100 : 0;} );
+	$('#invested-label')[0].innerHTML = 'Invertido: $' + Math.round(totalInv * 100) / 100;
 
 	totalInv <= 200000? $('#assets-in-portfolio-callout').attr('class', 'callout callout-success') : $('#assets-in-portfolio-callout').attr('class', 'callout callout-danger');
 	allowSaving();
 };
 
 var updateValue = function(asset) {
-	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset)*100)/100;
+	$('#' + asset.replace('.', '') + '-value')[0].innerHTML = Math.round(parseInt($('#' + asset.replace('.', '') + '-qty')[0].value) * assetsCatalogue.assetValue(asset) * 100) / 100;
 
 	try {
 		adjValue = $('#' + asset.replace('.', '') + '-qty')[0].value >= 0 ? $('#' + asset.replace('.', '') + '-qty')[0].value : 0;
@@ -279,22 +343,22 @@ var updateValue = function(asset) {
 		sellBuy = qtyDiff > 0 ? 'buy' : qtyDiff < 0 ? 'sell' : '';
 		if (sellBuy == 'buy') {
 			$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-buy');
-			$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'sell-buy-qty-label label-buy');
 			$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-buy');
-			$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-buy');
+			$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'sell-buy-value-label label-buy');
 			$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Comprar ';
 		} else {
 			if (sellBuy == 'sell') {
 				$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-sell');
-				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'sell-buy-qty-label label-sell');
 				$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-sell');
-				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-sell');
+				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'sell-buy-value-label label-sell');
 				$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Vender ';
 			} else {
 				$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-regular');
-				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-qty-diff-label').attr('class', 'sell-buy-qty-label label-regular');
 				$('#' + asset.replace('.', '') + '-diff-label').attr('class', 'label-regular');
-				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'label-regular');
+				$('#' + asset.replace('.', '') + '-value-diff-label').attr('class', 'sell-buy-value-label label-regular');
 				$('#' + asset.replace('.', '') + '-sell-buy-label')[0].innerHTML = 'Sin cambios';
 			}
 		};
@@ -331,6 +395,34 @@ var setPage = function() {
 	};
 	toolTips();
 	colorBoxes();
+
+	if (portfolio) {
+		$('#buttons-row')[0].innerHTML +=	'<div class="col-md-3 col-xs-4"> \
+												<button id="remove-button" class="btn btn-block btn-danger" title="Eliminar porfolio \'' + portfolio.name + '\'" data-toggle="modal" data-target="#removePortfolioModal">Eliminar Portfolio</button><br> \
+												<div class="modal fade" id="removePortfolioModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"> \
+													<div class="modal-dialog" role="document"> \
+														<div class="modal-content"> \
+															<div class="modal-header"> \
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button> \
+																<h4 class="modal-title" id="save-button-modal-title-label">Confirmar</h4> \
+															</div> \
+															<div class="modal-body" id="save-button-modal-body"> \
+																¿Confirma que desea eliminar su porfolio "' + portfolio.name + '"? \
+															</div> \
+															<div class="modal-footer"> \
+																<button type="button" class="btn btn-default" data-dismiss="modal">No</button> \
+																<button type="button" class="btn btn-primary" onclick="removePortfolio(\'' + portfolio.code + '\');" data-dismiss="modal">Sí</button> \
+															</div> \
+														</div> \
+													</div> \
+												</div> \
+											</div>'
+	};
+};
+
+var removePortfolio = function(porftolioCode) {
+	//Ajax para eliminar porfolio con code = portfolio.code
+	window.location.href = 'portfolio.html';
 };
 
 var resetPage = function() {
