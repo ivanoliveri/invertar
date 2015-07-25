@@ -1,19 +1,35 @@
-var assetsList = ['ypfd.ba', 'apbr.ba', 'ts.ba', 'teco2.ba', 'fran.ba', 'bma.ba', 'erar.ba', 'alua.ba', 'ggal.ba', 'bpat.ba', 'gcla.ba', 'pesa.ba', 'irsa.ba', 'apsa.ba', 'moli.ba', 'pamp.ba', 'ctio.ba', 'tgsu2.ba', 'bhip.ba', 'cres.ba', 'pata.ba', 'cepu2.ba', 'come.ba', 'edn.ba', 'lede.ba', 'jmin.ba', 'ceco2.ba', 'petr.ba', 'brio.ba', 'sami.ba', 'tef.ba', 'capx.ba', 'rigo.ba', 'invj.ba', 'tgno4.ba', 'esme.ba', 'indu.ba', 'gban.ba', 'bolt.ba', 'cgpa2.ba', 'mirg.ba', 'tran.ba', 'ferr.ba', 'metr.ba', 'celu.ba', 'paty.ba', 'tglt.ba', 'oest.ba', 'cado.ba', 'std.ba', 'grim.ba', 'capu.ba', 'dyca.ba', 'intr.ba', 'rep.ba', 'long.ba', 'auso.ba', 'carc.ba', 'semi.ba', 'rose.ba', 'estr.ba', 'colo.ba', 'psur.ba', 'fipl.ba', 'garo.ba', 'agro.ba', 'poll.ba', 'mori.ba']
-
 var asset;
 var asset2;
 
 $.ajax(
-	{url: 'http://localhost:8080/assets/1',
-	//url : 'http://localhost:8080/assets/' + parameters.asset, // cambiar linea anterior por esta cuando se tenga el GET por ticker en vez de id interno
+	{url : 'http://localhost:8080/assets/' + parameters.id,
 	dataType: 'json',
 	method: 'GET',
 	async: false,
 	success: function (data) {
 			asset = data;
-			//eliminar las siguientes  DOS lineas una vez que las variaciones diarias se computen en backend y que se agrugue el valor de assetType
-			asset.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;}); var prevValue = 0; $.each(asset.tradingSessions, function (i, ts) {prevValue != 0 ? ts['change'] = (ts.closingPrice - prevValue) / ts.closingPrice : ts['change'] = 0; prevValue = ts.closingPrice;} )
+			asset.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;});
+
+			//eliminar las siguiente linea una vez que se haya agregado el valor de assetType en backend
 			asset['assetType'] = 'Accion'
+
+			asset['setChanges'] = function(dateFrom, dateTo) {
+				df = new Date(dateFrom);
+				dfStr = df.getFullYear() + '-' + (parseInt(df.getMonth() ) + 1).toString() + '-' + df.getDate();
+				dt = new Date(dateTo);
+				dtStr = dt.getFullYear() + '-' + (parseInt(dt.getMonth() ) + 1).toString() + '-' + dt.getDate();
+				$.ajax(
+					{url : 'http://localhost:8080/assets/' + parameters.id + '/tradingsessions?startDate=' + dfStr + '&endDate=' + dtStr,
+					dataType: 'json',
+					method: 'GET',
+					async: false,
+					success: function (data2) {
+							$.each(data2, function(i, ts) {asset.tradingSessions.filter(function (x) {return x.tradingDate == ts.tradingDate;})[0]['change'] = ts.closingPrice;});
+						}
+					}
+				);
+			},
+
 			asset['minValue'] = function(dateFrom, dateTo, valueType) {
 				minValue = 0;
 				filteredData = this.tradingSessions.filter(function (x) {return x.tradingDate >= dateFrom && x.tradingDate <= dateTo;} );
@@ -35,10 +51,10 @@ $.ajax(
 			asset['chartData'] = function (dateFrom, dateTo, asset2) {
 				chartDataValue = [];
 				filteredData = this.tradingSessions.filter(function (x) {return x.tradingDate >= dateFrom && x.tradingDate <= dateTo;} );
-				if (asset2.ticker != 'nan') {filteredData2 = asset2.tradingSessions.filter(function (x) {return x.tradingDate >= dateFrom && x.tradingDate <= dateTo;} );}
+				if (asset2.id != 0) {filteredData2 = asset2.tradingSessions.filter(function (x) {return x.tradingDate >= dateFrom && x.tradingDate <= dateTo;} );}
 				for (x in filteredData) {
 					dateValue = filteredData[x].tradingDate;
-					if (asset2.ticker == 'nan') {chartDataValue.push({date: dateValue, close: filteredData[x].closingPrice, change: filteredData[x].change});} else {chartDataValue.push({date: dateValue, change: filteredData[x].change, change2: filteredData2[x].change} );};
+					if (asset2.id == 0) {chartDataValue.push({date: dateValue, close: filteredData[x].closingPrice, change: filteredData[x].change});} else {chartDataValue.push({date: dateValue, change: filteredData[x].change, change2: filteredData2[x].change} );};
 				};
 				return chartDataValue;
 			},
@@ -74,22 +90,53 @@ $.ajax(
 	}
 );
 
-var setAsset2 = function (ticker) {
-	if (ticker == 'nan') {
-		asset2 = {ticker: 'nan', htmlHeaderCode: function () {return '';} }
+$.ajax(
+	{url : 'http://localhost:8080/assets',
+	dataType: 'json',
+	method: 'GET',
+	success: function(data) {
+			innHTML = '<option value=0>- </option>'
+			assetsHTML = $.map(data.sort(function (a, b) {return a.ticker < b.ticker ? -1 : 1;}), function (x) {return {id: x.id, ticker: x.ticker, html: '<option value=' + x.id + '>' + x.ticker.toUpperCase() + ' </option>'};});
+			$.each(assetsHTML, function(i, a) {if (a.id != asset.id) {innHTML = innHTML + a.html;};});
+			$('#assets-drop-down')[0].innerHTML = innHTML;
+		}
+	}
+);
+
+var setAsset2 = function (id) {
+	if (id == 0) {
+		asset2 = {id: 0, htmlHeaderCode: function () {return '';} }
 		return;
 	};
 	$.ajax(
-		{url: 'http://localhost:8080/assets/2',
-		//url : 'http://localhost:8080/assets/' + ticker, // cambiar linea anterior por esta cuando se tenga el GET por ticker en vez de id interno
+		{url : 'http://localhost:8080/assets/' + id,
 		dataType: 'json',
 		method: 'GET',
 		async: false,
 		success: function (data) {
 				asset2 = data;
-				//eliminar las siguientes  DOS lineas una vez que las variaciones diarias se computen en backend y que se agrugue el valor de assetType
-				asset2.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;}); var prevValue = 0; $.each(asset2.tradingSessions, function (i, ts) {prevValue != 0 ? ts['change'] = (ts.closingPrice - prevValue) / ts.closingPrice : ts['change'] = 0; prevValue = ts.closingPrice;} )
+				asset2.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;});
+				
+				//eliminar las siguiente linea una vez que se haya agregado el valor de assetType en backend
 				asset2['assetType'] = 'Accion'
+
+				asset2['setChanges'] = function(dateFrom, dateTo) {
+					df = new Date(dateFrom);
+					dfStr = df.getFullYear() + '-' + (parseInt(df.getMonth() ) + 1).toString() + '-' + df.getDate();
+					dt = new Date(dateTo);
+					dtStr = dt.getFullYear() + '-' + (parseInt(dt.getMonth() ) + 1).toString() + '-' + dt.getDate();
+					$.ajax(
+						{url : 'http://localhost:8080/assets/' + asset2.id + '/tradingsessions?startDate=' + dfStr + '&endDate=' + dtStr,
+						dataType: 'json',
+						method: 'GET',
+						async: false,
+						success: function (data2) {
+								$.each(data2, function(i, ts) {asset2.tradingSessions.filter(function (x) {return x.tradingDate == ts.tradingDate;})[0]['change'] = ts.closingPrice;});
+							}
+						}
+					);
+				}
+
 				asset2['htmlHeaderCode'] = function () {
 					return 		'<div class="col-lg-5 col-md-6 col-xs-12"> \
 									<div class="info-box"> \
@@ -110,10 +157,12 @@ var setAsset2 = function (ticker) {
 var loadLines = function(startDate, endDate) {
 
 	$('#line-chart')[0].innerHTML = '';
+	asset.setChanges(startDate, endDate);
+	$('#assets-drop-down')[0].value != 0 ? asset2.setChanges(startDate, endDate) : a = 1
 	data = asset.chartData(startDate, endDate, asset2);
 	$('#value-drop-down')[0].value == 'close' ? ykeys = ['close'] :  ykeys = ['change'];
-	$('#assets-drop-down')[0].value != 'nan' ? ykeys = ['change', 'change2'] :  ykeys = ykeys;
-	$('#assets-drop-down')[0].value != 'nan' ? labels = [parameters.asset, $('#assets-drop-down')[0].value] :  labels = [parameters.asset];
+	$('#assets-drop-down')[0].value != 0 ? ykeys = ['change', 'change2'] :  ykeys = ykeys;
+	$('#assets-drop-down')[0].value != 0 ? labels = [parameters.asset, $('#assets-drop-down')[0].value] : labels = [parameters.asset];
 	$('#value-drop-down')[0].value == 'change' ? percentage = ' %' : percentage = '';
 
 	var line = new Morris.Line({
@@ -166,7 +215,7 @@ var reloadLines = function () {
 	startDate = new Date($('#date-range').val().split(' - ')[0].split('/')[2], $('#date-range').val().split(' - ')[0].split('/')[1], $('#date-range').val().split(' - ')[0].split('/')[0]).getTime();
 	endDate = new Date($('#date-range').val().split(' - ')[1].split('/')[2], $('#date-range').val().split(' - ')[1].split('/')[1], $('#date-range').val().split(' - ')[1].split('/')[0]).getTime();
 
-	$('#value-drop-down')[0].value == 'close' ? $('#assets-drop-down')[0].value = 'nan' : $('#assets-drop-down')[0].value = $('#assets-drop-down')[0].value; 
+	$('#value-drop-down')[0].value == 'close' ? $('#assets-drop-down')[0].value = 0 : $('#assets-drop-down')[0].value = $('#assets-drop-down')[0].value; 
 	setAsset2($('#assets-drop-down')[0].value);
 	$('#header-row')[0].innerHTML = asset.htmlHeaderCode() + asset2.htmlHeaderCode();
 

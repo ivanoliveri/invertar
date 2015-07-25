@@ -376,11 +376,6 @@
 				duplicated: true
 			});
 
-			innHTML = '<option value=nan>- </option>'
-			assets = $.map(assetsList.sort(), function (x) {return '<option value=' + x + '>' + x + ' </option>';});
-			for (a in assets) {if (assetsList[a] != parameters.asset) {innHTML = innHTML + assets[a];} }
-			$('#assets-drop-down')[0].innerHTML = innHTML;
-
 			stockChange();
 		</script>
 	</body>

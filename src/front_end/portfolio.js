@@ -3,24 +3,24 @@ var portfolio;
 try {
 	if (parameters.portfolio == 'porfolio1') {
 		portfolio = {
-			code: 'porfolio1',
+			ticker: 'porfolio1',
 			name: 'Porfolio 1',
 			description: 'Descripción del portfolio 1. Más texto.\nMás texto, más......',
 			assets: [
-						{code: 'apbr.ba', quantity: 200},
-						{code: 'dolar.blue', quantity: 4000},
-						{code: 'ypfd.ba', quantity: 30}
+						{ticker: 'apbr.ba', quantity: 200},
+						{ticker: 'dolar.blue', quantity: 4000},
+						{ticker: 'ypfd.ba', quantity: 30}
 					]
 		};
 	} else {
 		portfolio = {
-			code: 'porfolio2',
+			ticker: 'porfolio2',
 			name: 'Porfolio 2',
 			description: 'Descripción del portfolio 2.\nMás texto.\nMás texto, más......',
 			assets: [
-						{code: 'apbr.ba', quantity: 10},
-						{code: 'dolar.blue', quantity: 4000},
-						{code: 'ypfd.ba', quantity: 30}
+						{ticker: 'apbr.ba', quantity: 10},
+						{ticker: 'dolar.blue', quantity: 4000},
+						{ticker: 'ypfd.ba', quantity: 30}
 					]
 		};
 	};
@@ -30,87 +30,87 @@ try {
 
 var assetsCatalogue = {
 	data: [
-		{assetType: 'Móneda Extranjera', code: 'dolar.blue', name: 'Dólar Blue', industry: '', subIndustry: '', value: 13.15, trend: 'Sin cambio', variation: 9, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ypfd.ba', name: 'YPF S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 112.75, trend: 'Sin cambio', variation: -21, inPortfolio: 0},
-		{assetType: 'Acción', code: 'apbr.ba', name: 'Petróleo Brasileiro S.A', industry: 'Energía', subIndustry: 'Petróleo', value: 299.3, trend: 'En baja', variation: -18, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ts.ba', name: 'Tenaris S.A.', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 170.62, trend: 'En baja', variation: 2, inPortfolio: 0},
-		{assetType: 'Acción', code: 'teco2.ba', name: 'Telecom Argentina S.A.', industry: 'Comunicaciones', subIndustry: 'Telecomunicaciones', value: 234.4, trend: 'En baja', variation: 3, inPortfolio: 0},
-		{assetType: 'Acción', code: 'fran.ba', name: 'BBVA Banco Francés S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 184.94, trend: 'En alza', variation: -11, inPortfolio: 0},
-		{assetType: 'Acción', code: 'bma.ba', name: 'Banco Macro S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 174.86, trend: 'En alza', variation: 3, inPortfolio: 0},
-		{assetType: 'Acción', code: 'erar.ba', name: 'Ternium Siderar ', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 261.52, trend: 'En baja', variation: -8, inPortfolio: 0},
-		{assetType: 'Acción', code: 'alua.ba', name: 'Aluar Aluminio Argentino S.A.I.C. ', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 117.07, trend: 'En alza', variation: 9, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ggal.ba', name: 'Grupo Financiero Galicia S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 7.11, trend: 'En baja', variation: 7, inPortfolio: 0},
-		{assetType: 'Acción', code: 'bpat.ba', name: 'Banco Patagonia S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 106.32, trend: 'En alza', variation: -5, inPortfolio: 0},
-		{assetType: 'Acción', code: 'gcla.ba', name: 'Grupo Clarín S.A.', industry: 'Comunicaciones', subIndustry: 'Medios', value: 262.48, trend: 'En baja', variation: 25, inPortfolio: 0},
-		{assetType: 'Acción', code: 'pesa.ba', name: 'Petrobras Argentina SA ', industry: 'Energía', subIndustry: 'Petróleo', value: 298.6, trend: 'En baja', variation: -2, inPortfolio: 0},
-		{assetType: 'Acción', code: 'irsa.ba', name: 'IRSA Investments and Representations Inc.', industry: 'Financiera', subIndustry: 'Ni idea', value: 76.32, trend: 'En baja', variation: 1, inPortfolio: 0},
-		{assetType: 'Acción', code: 'apsa.ba', name: 'IRSA Propiedades Comerciales S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 58.53, trend: 'En baja', variation: -21, inPortfolio: 0},
-		{assetType: 'Acción', code: 'moli.ba', name: 'Molinos Rio de la Plata S.A.', industry: 'Alimentos', subIndustry: 'Alimentos', value: 151.41, trend: 'En baja', variation: 16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'pamp.ba', name: 'Pampa Energia SA', industry: 'Energía', subIndustry: 'Ni idea', value: 295.4, trend: 'En baja', variation: 1, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ctio.ba', name: 'Consultatio S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 122.57, trend: 'En alza', variation: 12, inPortfolio: 0},
-		{assetType: 'Acción', code: 'tgsu2.ba', name: 'Transportadora de Gas Del Sur S.A.', industry: 'Energía', subIndustry: 'Transporte / Logística', value: 272.73, trend: 'En baja', variation: 0, inPortfolio: 0},
-		{assetType: 'Acción', code: 'bhip.ba', name: 'Banco Hipotecario S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 135.8, trend: 'En alza', variation: -19, inPortfolio: 0},
-		{assetType: 'Acción', code: 'cres.ba', name: 'Cresud Sociedad Anónima Comercial, Inmobiliaria, Financiera y Agropecuaria', industry: 'Ni idea', subIndustry: 'Ni idea', value: 143.49, trend: 'En alza', variation: 10, inPortfolio: 0},
-		{assetType: 'Acción', code: 'pata.ba', name: 'Sociedad Anonima Importadora y Exportadora de la Patagonia', industry: 'Comercio exterior', subIndustry: 'Importaciones / Exportaciones', value: 266.66, trend: 'En baja', variation: 16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'cepu2.ba', name: 'Central Puerto S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 240.74, trend: 'En alza', variation: -14, inPortfolio: 0},
-		{assetType: 'Acción', code: 'come.ba', name: 'Sociedad Comercial del Plata S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 241.02, trend: 'En baja', variation: 10, inPortfolio: 0},
-		{assetType: 'Acción', code: 'edn.ba', name: 'EMP.DIST.Y COM.NORTE', industry: 'Energía', subIndustry: 'Infraestructura', value: 247.31, trend: 'En alza', variation: 23, inPortfolio: 0},
-		{assetType: 'Acción', code: 'lede.ba', name: 'Ledesma Sociedad Anónima Agrícola Industrial', industry: 'Alimentos', subIndustry: 'Agropecuaria', value: 224.78, trend: 'En baja', variation: 13, inPortfolio: 0},
-		{assetType: 'Acción', code: 'jmin.ba', name: 'Holcim (Argentina) SA', industry: 'Ni idea', subIndustry: 'Ni idea', value: 65.82, trend: 'En baja', variation: 5, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ceco2.ba', name: 'Endesa Costanera SA', industry: 'Energía', subIndustry: 'Infraestructura', value: 96.89, trend: 'En alza', variation: -11, inPortfolio: 0},
-		{assetType: 'Acción', code: 'petr.ba', name: 'Petrolera Pampa S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 253.16, trend: 'En baja', variation: -19, inPortfolio: 0},
-		{assetType: 'Acción', code: 'brio.ba', name: 'Banco Santander Rio S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 215.45, trend: 'En alza', variation: 21, inPortfolio: 0},
-		{assetType: 'Acción', code: 'sami.ba', name: 'S.A. San Miguel A.G.I.C.I. y F. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 5.44, trend: 'En baja', variation: 16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'tef.ba', name: 'Telefónica, S.A. ', industry: 'Comunicaciones', subIndustry: 'Telecomunicaciones', value: 65.63, trend: 'En baja', variation: -13, inPortfolio: 0},
-		{assetType: 'Acción', code: 'capx.ba', name: 'Capex S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 99.55, trend: 'En alza', variation: 18, inPortfolio: 0},
-		{assetType: 'Acción', code: 'rigo.ba', name: 'Rigolleau S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 150.78, trend: 'En baja', variation: -8, inPortfolio: 0},
-		{assetType: 'Acción', code: 'invj.ba', name: 'Inversora Juramento S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 90.27, trend: 'En baja', variation: 6, inPortfolio: 0},
-		{assetType: 'Acción', code: 'tgno4.ba', name: 'Transportadora de Gas del Norte S.A.', industry: 'Energía', subIndustry: 'Transporte / Logística', value: 265.02, trend: 'En baja', variation: -12, inPortfolio: 0},
-		{assetType: 'Acción', code: 'esme.ba', name: 'Bodegas Esmeralda S.A.', industry: 'Alimentos', subIndustry: 'Bodega', value: 31.29, trend: 'En alza', variation: -2, inPortfolio: 0},
-		{assetType: 'Acción', code: 'indu.ba', name: 'Solvay Indupa S.A.I.C. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 192, trend: 'En baja', variation: -7, inPortfolio: 0},
-		{assetType: 'Acción', code: 'gban.ba', name: 'Gas Natural Ban, S.A.', industry: 'Energía', subIndustry: 'Gas', value: 293.57, trend: 'En baja', variation: -1, inPortfolio: 0},
-		{assetType: 'Acción', code: 'bolt.ba', name: 'Boldt S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 62.47, trend: 'En alza', variation: 6, inPortfolio: 0},
-		{assetType: 'Acción', code: 'cgpa2.ba', name: 'Camuzzi Gas Pampeana S.A.', industry: 'Energía', subIndustry: 'Gas', value: 69.37, trend: 'En alza', variation: -10, inPortfolio: 0},
-		{assetType: 'Acción', code: 'mirg.ba', name: 'Mirgor S.A.C.I.F.I.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 18.4, trend: 'En baja', variation: 16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'tran.ba', name: 'Compania de Transporte de Energia Electrica en Alta Tension Transener', industry: 'Energía', subIndustry: 'Infraestructura', value: 283.36, trend: 'En alza', variation: -8, inPortfolio: 0},
-		{assetType: 'Acción', code: 'ferr.ba', name: 'Ferrum Sociedad Anonima de Ceramica y Metalurgia', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 150.01, trend: 'En alza', variation: -16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'metr.ba', name: 'MetroGAS S.A.', industry: 'Energía', subIndustry: 'Gas', value: 264.73, trend: 'En baja', variation: 12, inPortfolio: 0},
-		{assetType: 'Acción', code: 'celu.ba', name: 'Celulosa Argentina S.A.', industry: 'Química', subIndustry: 'Celulosa', value: 241.59, trend: 'En alza', variation: -1, inPortfolio: 0},
-		{assetType: 'Acción', code: 'paty.ba', name: 'Quickfood Sociedad Anonima ', industry: 'Alimentos', subIndustry: 'Alimentos', value: 289.11, trend: 'En baja', variation: 4, inPortfolio: 0},
-		{assetType: 'Acción', code: 'tglt.ba', name: 'TGLT S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 32.2, trend: 'En baja', variation: 16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'oest.ba', name: 'Grupo Concesionario del Oeste S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 60.69, trend: 'En baja', variation: 21, inPortfolio: 0},
-		{assetType: 'Acción', code: 'cado.ba', name: 'Carlos Casado S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 175.25, trend: 'En alza', variation: 12, inPortfolio: 0},
-		{assetType: 'Acción', code: 'std.ba', name: 'Banco Santander, S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 102.95, trend: 'En alza', variation: 11, inPortfolio: 0},
-		{assetType: 'Acción', code: 'grim.ba', name: 'Grimoldi S.A. ', industry: 'Indumentaria', subIndustry: 'Indumentaria', value: 300.94, trend: 'En baja', variation: -9, inPortfolio: 0},
-		{assetType: 'Acción', code: 'capu.ba', name: 'Caputo S.A.I.C. y F.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 105.89, trend: 'En alza', variation: -3, inPortfolio: 0},
-		{assetType: 'Acción', code: 'dyca.ba', name: 'Dycasa SA', industry: 'Ni idea', subIndustry: 'Ni idea', value: 255.45, trend: 'En alza', variation: 9, inPortfolio: 0},
-		{assetType: 'Acción', code: 'intr.ba', name: 'Compania Introductora de Buenos Aires Sociedad Anonima ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 36, trend: 'En alza', variation: -18, inPortfolio: 0},
-		{assetType: 'Acción', code: 'rep.ba', name: 'Repsol, S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 153.58, trend: 'En baja', variation: 17, inPortfolio: 0},
-		{assetType: 'Acción', code: 'long.ba', name: 'Longvie S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 62.41, trend: 'En baja', variation: 13, inPortfolio: 0},
-		{assetType: 'Acción', code: 'auso.ba', name: 'Autopistas Del Sol SA ', industry: 'Transporte / Logística', subIndustry: 'Infraestructura', value: 89.01, trend: 'En alza', variation: -16, inPortfolio: 0},
-		{assetType: 'Acción', code: 'carc.ba', name: 'Carboclor S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 227.31, trend: 'En alza', variation: 24, inPortfolio: 0},
-		{assetType: 'Acción', code: 'semi.ba', name: 'Molinos Juan Semino S.A.', industry: 'Alimentos', subIndustry: 'Alimentos', value: 96.19, trend: 'En baja', variation: 7, inPortfolio: 0},
-		{assetType: 'Acción', code: 'rose.ba', name: 'Instituto Rosenbusch S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 245.18, trend: 'En baja', variation: -1, inPortfolio: 0},
-		{assetType: 'Acción', code: 'estr.ba', name: 'Angel Estrada y Compania S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 219, trend: 'En alza', variation: -19, inPortfolio: 0},
-		{assetType: 'Acción', code: 'colo.ba', name: 'Colorin Industria de Materiales Sinteticos S.A.', industry: 'Materiales', subIndustry: 'Sintéticos', value: 136.99, trend: 'En alza', variation: 22, inPortfolio: 0},
-		{assetType: 'Acción', code: 'psur.ba', name: 'Petrolera del Conosur S.A. ', industry: 'Energía', subIndustry: 'Petróleo', value: 116.26, trend: 'En baja', variation: -6, inPortfolio: 0},
-		{assetType: 'Acción', code: 'fipl.ba', name: 'Fiplasto S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 22.49, trend: 'En alza', variation: 3, inPortfolio: 0},
-		{assetType: 'Acción', code: 'garo.ba', name: 'Garovaglio y Zorraquin S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 89.37, trend: 'En baja', variation: -7, inPortfolio: 0},
-		{assetType: 'Acción', code: 'agro.ba', name: 'Agrometal S.A.I. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 253.26, trend: 'En alza', variation: 15, inPortfolio: 0},
-		{assetType: 'Acción', code: 'poll.ba', name: 'Polledo S.A.I.C. y F.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 72.59, trend: 'En baja', variation: 17, inPortfolio: 0},
-		{assetType: 'Acción', code: 'mori.ba', name: 'Morixe Hermanos S.A.C. e I.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 103.95, trend: 'En baja', variation: 20, inPortfolio: 0}
+		{assetType: 'Móneda Extranjera', id: 1, ticker: 'dolar.blue', name: 'Dólar Blue', industry: '', subIndustry: '', value: 13.15, trend: 'Sin cambio', variation: 9, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ypfd.ba', name: 'YPF S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 112.75, trend: 'Sin cambio', variation: -21, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'apbr.ba', name: 'Petróleo Brasileiro S.A', industry: 'Energía', subIndustry: 'Petróleo', value: 299.3, trend: 'En baja', variation: -18, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ts.ba', name: 'Tenaris S.A.', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 170.62, trend: 'En baja', variation: 2, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'teco2.ba', name: 'Telecom Argentina S.A.', industry: 'Comunicaciones', subIndustry: 'Telecomunicaciones', value: 234.4, trend: 'En baja', variation: 3, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'fran.ba', name: 'BBVA Banco Francés S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 184.94, trend: 'En alza', variation: -11, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'bma.ba', name: 'Banco Macro S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 174.86, trend: 'En alza', variation: 3, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'erar.ba', name: 'Ternium Siderar ', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 261.52, trend: 'En baja', variation: -8, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'alua.ba', name: 'Aluar Aluminio Argentino S.A.I.C. ', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 117.07, trend: 'En alza', variation: 9, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ggal.ba', name: 'Grupo Financiero Galicia S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 7.11, trend: 'En baja', variation: 7, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'bpat.ba', name: 'Banco Patagonia S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 106.32, trend: 'En alza', variation: -5, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'gcla.ba', name: 'Grupo Clarín S.A.', industry: 'Comunicaciones', subIndustry: 'Medios', value: 262.48, trend: 'En baja', variation: 25, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'pesa.ba', name: 'Petrobras Argentina SA ', industry: 'Energía', subIndustry: 'Petróleo', value: 298.6, trend: 'En baja', variation: -2, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'irsa.ba', name: 'IRSA Investments and Representations Inc.', industry: 'Financiera', subIndustry: 'Ni idea', value: 76.32, trend: 'En baja', variation: 1, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'apsa.ba', name: 'IRSA Propiedades Comerciales S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 58.53, trend: 'En baja', variation: -21, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'moli.ba', name: 'Molinos Rio de la Plata S.A.', industry: 'Alimentos', subIndustry: 'Alimentos', value: 151.41, trend: 'En baja', variation: 16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'pamp.ba', name: 'Pampa Energia SA', industry: 'Energía', subIndustry: 'Ni idea', value: 295.4, trend: 'En baja', variation: 1, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ctio.ba', name: 'Consultatio S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 122.57, trend: 'En alza', variation: 12, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'tgsu2.ba', name: 'Transportadora de Gas Del Sur S.A.', industry: 'Energía', subIndustry: 'Transporte / Logística', value: 272.73, trend: 'En baja', variation: 0, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'bhip.ba', name: 'Banco Hipotecario S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 135.8, trend: 'En alza', variation: -19, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'cres.ba', name: 'Cresud Sociedad Anónima Comercial, Inmobiliaria, Financiera y Agropecuaria', industry: 'Ni idea', subIndustry: 'Ni idea', value: 143.49, trend: 'En alza', variation: 10, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'pata.ba', name: 'Sociedad Anonima Importadora y Exportadora de la Patagonia', industry: 'Comercio exterior', subIndustry: 'Importaciones / Exportaciones', value: 266.66, trend: 'En baja', variation: 16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'cepu2.ba', name: 'Central Puerto S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 240.74, trend: 'En alza', variation: -14, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'come.ba', name: 'Sociedad Comercial del Plata S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 241.02, trend: 'En baja', variation: 10, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'edn.ba', name: 'EMP.DIST.Y COM.NORTE', industry: 'Energía', subIndustry: 'Infraestructura', value: 247.31, trend: 'En alza', variation: 23, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'lede.ba', name: 'Ledesma Sociedad Anónima Agrícola Industrial', industry: 'Alimentos', subIndustry: 'Agropecuaria', value: 224.78, trend: 'En baja', variation: 13, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'jmin.ba', name: 'Holcim (Argentina) SA', industry: 'Ni idea', subIndustry: 'Ni idea', value: 65.82, trend: 'En baja', variation: 5, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ceco2.ba', name: 'Endesa Costanera SA', industry: 'Energía', subIndustry: 'Infraestructura', value: 96.89, trend: 'En alza', variation: -11, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'petr.ba', name: 'Petrolera Pampa S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 253.16, trend: 'En baja', variation: -19, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'brio.ba', name: 'Banco Santander Rio S.A.', industry: 'Financiera', subIndustry: 'Bancos', value: 215.45, trend: 'En alza', variation: 21, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'sami.ba', name: 'S.A. San Miguel A.G.I.C.I. y F. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 5.44, trend: 'En baja', variation: 16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'tef.ba', name: 'Telefónica, S.A. ', industry: 'Comunicaciones', subIndustry: 'Telecomunicaciones', value: 65.63, trend: 'En baja', variation: -13, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'capx.ba', name: 'Capex S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 99.55, trend: 'En alza', variation: 18, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'rigo.ba', name: 'Rigolleau S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 150.78, trend: 'En baja', variation: -8, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'invj.ba', name: 'Inversora Juramento S.A.', industry: 'Financiera', subIndustry: 'Ni idea', value: 90.27, trend: 'En baja', variation: 6, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'tgno4.ba', name: 'Transportadora de Gas del Norte S.A.', industry: 'Energía', subIndustry: 'Transporte / Logística', value: 265.02, trend: 'En baja', variation: -12, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'esme.ba', name: 'Bodegas Esmeralda S.A.', industry: 'Alimentos', subIndustry: 'Bodega', value: 31.29, trend: 'En alza', variation: -2, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'indu.ba', name: 'Solvay Indupa S.A.I.C. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 192, trend: 'En baja', variation: -7, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'gban.ba', name: 'Gas Natural Ban, S.A.', industry: 'Energía', subIndustry: 'Gas', value: 293.57, trend: 'En baja', variation: -1, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'bolt.ba', name: 'Boldt S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 62.47, trend: 'En alza', variation: 6, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'cgpa2.ba', name: 'Camuzzi Gas Pampeana S.A.', industry: 'Energía', subIndustry: 'Gas', value: 69.37, trend: 'En alza', variation: -10, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'mirg.ba', name: 'Mirgor S.A.C.I.F.I.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 18.4, trend: 'En baja', variation: 16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'tran.ba', name: 'Compania de Transporte de Energia Electrica en Alta Tension Transener', industry: 'Energía', subIndustry: 'Infraestructura', value: 283.36, trend: 'En alza', variation: -8, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'ferr.ba', name: 'Ferrum Sociedad Anonima de Ceramica y Metalurgia', industry: 'Materiales', subIndustry: 'Metalúrgica', value: 150.01, trend: 'En alza', variation: -16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'metr.ba', name: 'MetroGAS S.A.', industry: 'Energía', subIndustry: 'Gas', value: 264.73, trend: 'En baja', variation: 12, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'celu.ba', name: 'Celulosa Argentina S.A.', industry: 'Química', subIndustry: 'Celulosa', value: 241.59, trend: 'En alza', variation: -1, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'paty.ba', name: 'Quickfood Sociedad Anonima ', industry: 'Alimentos', subIndustry: 'Alimentos', value: 289.11, trend: 'En baja', variation: 4, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'tglt.ba', name: 'TGLT S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 32.2, trend: 'En baja', variation: 16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'oest.ba', name: 'Grupo Concesionario del Oeste S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 60.69, trend: 'En baja', variation: 21, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'cado.ba', name: 'Carlos Casado S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 175.25, trend: 'En alza', variation: 12, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'std.ba', name: 'Banco Santander, S.A. ', industry: 'Financiera', subIndustry: 'Bancos', value: 102.95, trend: 'En alza', variation: 11, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'grim.ba', name: 'Grimoldi S.A. ', industry: 'Indumentaria', subIndustry: 'Indumentaria', value: 300.94, trend: 'En baja', variation: -9, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'capu.ba', name: 'Caputo S.A.I.C. y F.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 105.89, trend: 'En alza', variation: -3, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'dyca.ba', name: 'Dycasa SA', industry: 'Ni idea', subIndustry: 'Ni idea', value: 255.45, trend: 'En alza', variation: 9, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'intr.ba', name: 'Compania Introductora de Buenos Aires Sociedad Anonima ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 36, trend: 'En alza', variation: -18, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'rep.ba', name: 'Repsol, S.A.', industry: 'Energía', subIndustry: 'Petróleo', value: 153.58, trend: 'En baja', variation: 17, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'long.ba', name: 'Longvie S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 62.41, trend: 'En baja', variation: 13, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'auso.ba', name: 'Autopistas Del Sol SA ', industry: 'Transporte / Logística', subIndustry: 'Infraestructura', value: 89.01, trend: 'En alza', variation: -16, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'carc.ba', name: 'Carboclor S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 227.31, trend: 'En alza', variation: 24, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'semi.ba', name: 'Molinos Juan Semino S.A.', industry: 'Alimentos', subIndustry: 'Alimentos', value: 96.19, trend: 'En baja', variation: 7, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'rose.ba', name: 'Instituto Rosenbusch S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 245.18, trend: 'En baja', variation: -1, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'estr.ba', name: 'Angel Estrada y Compania S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 219, trend: 'En alza', variation: -19, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'colo.ba', name: 'Colorin Industria de Materiales Sinteticos S.A.', industry: 'Materiales', subIndustry: 'Sintéticos', value: 136.99, trend: 'En alza', variation: 22, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'psur.ba', name: 'Petrolera del Conosur S.A. ', industry: 'Energía', subIndustry: 'Petróleo', value: 116.26, trend: 'En baja', variation: -6, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'fipl.ba', name: 'Fiplasto S.A.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 22.49, trend: 'En alza', variation: 3, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'garo.ba', name: 'Garovaglio y Zorraquin S.A. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 89.37, trend: 'En baja', variation: -7, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'agro.ba', name: 'Agrometal S.A.I. ', industry: 'Ni idea', subIndustry: 'Ni idea', value: 253.26, trend: 'En alza', variation: 15, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'poll.ba', name: 'Polledo S.A.I.C. y F.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 72.59, trend: 'En baja', variation: 17, inPortfolio: 0},
+		{assetType: 'Acción', id: 1, ticker: 'mori.ba', name: 'Morixe Hermanos S.A.C. e I.', industry: 'Ni idea', subIndustry: 'Ni idea', value: 103.95, trend: 'En baja', variation: 20, inPortfolio: 0}
 	],
 	assetBox: function(asset, action) {
-		ast = this.data.filter(function (x) {return x.code == asset;})[0];
+		ast = this.data.filter(function (x) {return x.ticker == asset;})[0];
 		if (action == 'add') {
 			sign = 'plus-round';
 			toolTip = 'Agregar a porfolio';
-			onClick = 'addAsset(\'' + ast.code + '\', 0);';
+			onClick = 'addAsset(\'' + ast.ticker + '\', 0);';
 		};
 		if (action == 'remove') {
 			sign = 'minus-round';
 			toolTip = 'Quitar de porfolio';
-			onClick = 'removeAsset(\'' + ast.code + '\');';
+			onClick = 'removeAsset(\'' + ast.ticker + '\');';
 		};
 		if (action == 'locked') {
 			sign = 'locked';
@@ -119,16 +119,16 @@ var assetsCatalogue = {
 		};
 		if (ast) {
 			return '	<div class="col-lg-2 col-md-3 col-sm-4 col-xs-6"> \
-							<div class="small-box" id="' + ast.code.replace('.', '') + '-box" data-toggle="tooltip" title="' + ast.assetType + ' - ' + ast.code + '<br>' + ast.name + '<br>$' + ast.value + ' - ' + ast.trend + '<br>" data-placement="bottom"> \
+							<div class="small-box" id="' + ast.ticker.replace('.', '') + '-box" data-toggle="tooltip" title="' + ast.assetType + ' - ' + ast.ticker + '<br>' + ast.name + '<br>$' + ast.value + ' - ' + ast.trend + '<br>" data-placement="bottom"> \
 								<div class="inner"> \
-									<h3>' + ast.code + '</h3> \
+									<h3>' + ast.ticker + '</h3> \
 									<h4> $' + ast.value + '</h5> \
 									<p>' + ast.variation + '%</p> \
 								</div> \
 								<div class="icon"> \
 									<i class="ion ion-' + sign + ' ionIconSize" title="' + toolTip + '" data-placement="top" onclick="' + onClick + '"></i> <!--close-round--> \
 								</div> \
-								<a href="perfilActivo.html?asset=' + ast.code + '" class="small-box-footer">Ir a perfil activo <i class="fa fa-arrow-circle-right"></i></a> \
+								<a href="perfilActivo.html?id=' + ast.id + '" class="small-box-footer">Ir a perfil activo <i class="fa fa-arrow-circle-right"></i></a> \
 							</div> \
 						</div>'
 		} else {
@@ -137,18 +137,18 @@ var assetsCatalogue = {
 	},
 	boxes: function(boxes, action) {
 		html = '';
-		bxs = this.data.filter(function (x) {return boxes.indexOf(x.code) > -1;});
+		bxs = this.data.filter(function (x) {return boxes.indexOf(x.ticker) > -1;});
 		for (a in bxs) {
-			html += this.assetBox(bxs[a].code, action);
+			html += this.assetBox(bxs[a].ticker, action);
 		};
 		return html;
 	},
 	allBoxes: function(action, exclude) {
 		exclude = exclude || [];
-		return this.boxes($.map(this.data, function (x) {return exclude.indexOf(x.code) == - 1 ? x.code : undefined;}), action);
+		return this.boxes($.map(this.data, function (x) {return exclude.indexOf(x.ticker) == - 1 ? x.ticker : undefined;}), action);
 	},
 	varColor: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset;})[0];
+		ast = this.data.filter(function (x) {return x.ticker == asset;})[0];
 		if (ast) {
 			vars = $.map(this.data, function (x) {return x.variation;});
 			vars.sort(function (a, b) {return a - b;});
@@ -161,7 +161,7 @@ var assetsCatalogue = {
 		};
 	},
 	addRemoveAssetFromPortfolio: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset;})[0];
+		ast = this.data.filter(function (x) {return x.ticker == asset;})[0];
 		if (ast) {
 			ast.inPortfolio = Math.abs(ast.inPortfolio - 1)
 		};
@@ -171,23 +171,23 @@ var assetsCatalogue = {
 		return assetsCatalogue.data.filter(function(x) {return x.inPortfolio == 1;});
 	},
 	assetValue: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
+		ast = this.data.filter(function (x) {return x.ticker == asset | x.ticker.replace('.', '') == asset;})[0];
 		if (ast) {
 			return ast.value;
 		} else {
 			return 0;
 		};
 	},
-	assetCode: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
+	assetticker: function(asset) {
+		ast = this.data.filter(function (x) {return x.ticker == asset | x.ticker.replace('.', '') == asset;})[0];
 		if (ast) {
-			return ast.code;
+			return ast.ticker;
 		} else {
 			return;
 		};
 	},
 	assetType: function(asset) {
-		ast = this.data.filter(function (x) {return x.code == asset | x.code.replace('.', '') == asset;})[0];
+		ast = this.data.filter(function (x) {return x.ticker == asset | x.ticker.replace('.', '') == asset;})[0];
 		if (ast) {
 			return ast.assetType;
 		} else {
@@ -210,7 +210,7 @@ var allowSaving = function() {
 var savePortfolio = function() {
 	if (portfolio) {
 		//Ajax to save changes to portfolio
-		window.location.href = 'portfolio.html?portfolio=' + portfolio.code;
+		window.location.href = 'portfolio.html?portfolio=' + portfolio.ticker;
 	} else {
 		//Ajax to save new portfolio
 		window.location.href = 'portfolio.html';
@@ -228,37 +228,39 @@ var setSaveButtonModalBody = function() {
 	replace['%description%'] = $('#description-textbox')[0].value != '' ? '<br><br>' + $('#description-textbox')[0].value : '';
 	replace['%invested%'] = $('#invested-label')[0].innerHTML.replace('Invertido: ', '');
 
-	purchasesStr = '<br><br><b>Compras</b><br>';
-	purchasesTotal = 0;
-	newPurchasedAssets = $.map(assetsCatalogue.assetsInPortfolio(), function (x) {return x.code;}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.code;}).indexOf(x) == -1;});
-	purchases = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';}).concat($.map(newPurchasedAssets, function (x) {return assetsCatalogue.assetType(x) + ' <b>' + x + '</b>, <b>' + $('#' + x.replace('.', '') + '-qty')[0].value + '</b> unidades por <b>$' + $('#' + x.replace('.', '') + '-value')[0].innerHTML + '</b><br>';}) );
-	purchaseValues = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;}).concat($.map(newPurchasedAssets, function (x) {return Math.round(parseFloat($('#' + x.replace('.', '') + '-value')[0].innerHTML) * 100) / 100;}));
-	for (p in purchases) {
-		purchasesStr += purchases[p];
-		purchasesTotal += purchaseValues[p];
-	};
-	purchasesStr == '<br><br><b>Compras</b><br>' ? purchasesStr = '' : purchasesStr = '<font color="#970404">' + purchasesStr + 'Total: <b>' + Math.round(purchasesTotal * 100) / 100 + '</b></font>';
-	replace['%purchases%'] = purchasesStr;
+	if (portfolio) {
+		purchasesStr = '<br><br><b>Compras</b><br>';
+		purchasesTotal = 0;
+		newPurchasedAssets = $.map(assetsCatalogue.assetsInPortfolio(), function (x) {return x.ticker;}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.ticker;}).indexOf(x) == -1;});
+		purchases = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';}).concat($.map(newPurchasedAssets, function (x) {return assetsCatalogue.assetType(x) + ' <b>' + x + '</b>, <b>' + $('#' + x.replace('.', '') + '-qty')[0].value + '</b> unidades por <b>$' + $('#' + x.replace('.', '') + '-value')[0].innerHTML + '</b><br>';}) );
+		purchaseValues = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;}).concat($.map(newPurchasedAssets, function (x) {return Math.round(parseFloat($('#' + x.replace('.', '') + '-value')[0].innerHTML) * 100) / 100;}));
+		for (p in purchases) {
+			purchasesStr += purchases[p];
+			purchasesTotal += purchaseValues[p];
+		};
+		purchasesStr == '<br><br><b>Compras</b><br>' ? purchasesStr = '' : purchasesStr = '<font color="#970404">' + purchasesStr + 'Total: <b>' + Math.round(purchasesTotal * 100) / 100 + '</b></font>';
+		replace['%purchases%'] = purchasesStr;
 
-
-	salesStr = '<br><br><b>Ventas</b><br>';
-	salesTotal = 0;
-	sales = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';});
-	saleValues = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;});
-	for (s in sales) {
-		salesStr += sales[s];
-		salesTotal += saleValues[s];
-	};
-	salesStr == '<br><br><b>Ventas</b><br>' ? salesStr = '' : salesStr = '<font color="#118707">' + salesStr + 'Total: <b>' + Math.round(salesTotal * 100) / 100 + '</b></font>';
-	replace['%sales%'] = salesStr;
+		salesStr = '<br><br><b>Ventas</b><br>';
+		salesTotal = 0;
+		sales = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';});
+		saleValues = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;});
+		for (s in sales) {
+			salesStr += sales[s];
+			salesTotal += saleValues[s];
+		};
+		salesStr == '<br><br><b>Ventas</b><br>' ? salesStr = '' : salesStr = '<font color="#118707">' + salesStr + 'Total: <b>' + Math.round(salesTotal * 100) / 100 + '</b></font>';
+		replace['%sales%'] = salesStr;
+	}
 
 	assetsInPortfolioStr = '';
-	assetsInPortfolio = $.map($('.value-label') , function (x) {return assetsCatalogue.assetType(x.id.replace('-value', '') ) + ' <b>' + assetsCatalogue.assetCode(x.id.replace('-value', '') ) + '</b>, <b>' + $('#' + x.id.replace('-value', '-qty') )[0].value + '</b> unidades por <b>$' + x.innerHTML + '</b><br>';});
+	assetsInPortfolio = $.map($('.value-label') , function (x) {return assetsCatalogue.assetType(x.id.replace('-value', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-value', '') ) + '</b>, <b>' + $('#' + x.id.replace('-value', '-qty') )[0].value + '</b> unidades por <b>$' + x.innerHTML + '</b><br>';});
 	for (a in assetsInPortfolio) {
 		assetsInPortfolioStr += assetsInPortfolio[a];
 	};
 	replace['%assetsInPortfolio%'] = assetsInPortfolioStr;
 
+	$('#save-button-modal-body')[0].innerHTML = replace['%OverwriteString%']
 	for (r in replace) {$('#save-button-modal-body')[0].innerHTML = $('#save-button-modal-body')[0].innerHTML.replace(r, replace[r] );}
 };
 
@@ -319,7 +321,7 @@ var addAsset = function(asset, locked) {
 var removeAsset = function(asset) {
 	assetsCatalogue.addRemoveAssetFromPortfolio(asset);
 	$('#' + asset.replace('.', '') + '-box').parent().parent().parent().remove();
-	$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add', $.map(assetsCatalogue.assetsInPortfolio(), function(x) {return x.code;}) );
+	$('#assets-to-add-row')[0].innerHTML = assetsCatalogue.allBoxes('add', $.map(assetsCatalogue.assetsInPortfolio(), function(x) {return x.ticker;}) );
 	toolTips();
 	colorBoxes();
 	updateInvestedValue();
@@ -339,7 +341,7 @@ var updateValue = function(asset) {
 
 	try {
 		adjValue = $('#' + asset.replace('.', '') + '-qty')[0].value >= 0 ? $('#' + asset.replace('.', '') + '-qty')[0].value : 0;
-		qtyDiff = adjValue - portfolio.assets.filter(function (x) {return x.code == asset;})[0].quantity;
+		qtyDiff = adjValue - portfolio.assets.filter(function (x) {return x.ticker == asset;})[0].quantity;
 		sellBuy = qtyDiff > 0 ? 'buy' : qtyDiff < 0 ? 'sell' : '';
 		if (sellBuy == 'buy') {
 			$('#' + asset.replace('.', '') + '-sell-buy-label').attr('class', 'label-buy');
@@ -377,7 +379,7 @@ var toolTips = function() {
 };
 
 var colorBoxes = function () {
-	for (a in assetsCatalogue.data) {$('#' + assetsCatalogue.data[a].code.replace('.', '') + '-box').css('background-color', assetsCatalogue.varColor(assetsCatalogue.data[a].code) );};
+	for (a in assetsCatalogue.data) {$('#' + assetsCatalogue.data[a].ticker.replace('.', '') + '-box').css('background-color', assetsCatalogue.varColor(assetsCatalogue.data[a].ticker) );};
 };
 
 var setPage = function() {
@@ -385,11 +387,11 @@ var setPage = function() {
 	!portfolio ? $('#description-textbox')[0].value = '' : $('#description-textbox')[0].value = portfolio.description;
 	if (portfolio) {
 		for (ass in portfolio.assets) {
-			addAsset(portfolio.assets[ass].code, 1);
+			addAsset(portfolio.assets[ass].ticker, 1);
 		};
 		for (ass in portfolio.assets) {
-			$('#' + portfolio.assets[ass].code.replace('.', '') + '-qty')[0].value = portfolio.assets[ass].quantity;
-			updateValue(portfolio.assets[ass].code);
+			$('#' + portfolio.assets[ass].ticker.replace('.', '') + '-qty')[0].value = portfolio.assets[ass].quantity;
+			updateValue(portfolio.assets[ass].ticker);
 		};
 		updateInvestedValue();
 	};
@@ -411,7 +413,7 @@ var setPage = function() {
 															</div> \
 															<div class="modal-footer"> \
 																<button type="button" class="btn btn-default" data-dismiss="modal">No</button> \
-																<button type="button" class="btn btn-primary" onclick="removePortfolio(\'' + portfolio.code + '\');" data-dismiss="modal">Sí</button> \
+																<button type="button" class="btn btn-primary" onclick="removePortfolio(\'' + portfolio.ticker + '\');" data-dismiss="modal">Sí</button> \
 															</div> \
 														</div> \
 													</div> \
@@ -420,8 +422,8 @@ var setPage = function() {
 	};
 };
 
-var removePortfolio = function(porftolioCode) {
-	//Ajax para eliminar porfolio con code = portfolio.code
+var removePortfolio = function(porftolioticker) {
+	//Ajax para eliminar porfolio con ticker = portfolio.ticker
 	window.location.href = 'portfolio.html';
 };
 
