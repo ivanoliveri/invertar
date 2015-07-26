@@ -6,6 +6,7 @@ $.ajax(
 	dataType: 'json',
 	method: 'GET',
 	async: false,
+	xhrFields: {withCredentials: true},
 	success: function (data) {
 			asset = data;
 			asset.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;});
@@ -19,12 +20,13 @@ $.ajax(
 				dt = new Date(dateTo);
 				dtStr = dt.getFullYear() + '-' + (parseInt(dt.getMonth() ) + 1).toString() + '-' + dt.getDate();
 				$.ajax(
-					{url : 'http://localhost:8080/assets/' + parameters.id + '/tradingsessions?startDate=' + dfStr + '&endDate=' + dtStr,
+					{url: 'http://localhost:8080/assets/' + parameters.id + '/tradingSessions/changePercentage?startDate=' + dfStr + '&endDate=' + dtStr,
 					dataType: 'json',
 					method: 'GET',
 					async: false,
+					xhrFields: {withCredentials: true},
 					success: function (data2) {
-							$.each(data2, function(i, ts) {asset.tradingSessions.filter(function (x) {return x.tradingDate == ts.tradingDate;})[0]['change'] = ts.closingPrice;});
+							$.each(asset.tradingSessions, function (i, ts) {ts.change = data2[ts.tradingDate];})
 						}
 					}
 				);
@@ -94,6 +96,7 @@ $.ajax(
 	{url : 'http://localhost:8080/assets',
 	dataType: 'json',
 	method: 'GET',
+	xhrFields: {withCredentials: true},
 	success: function(data) {
 			innHTML = '<option value=0>- </option>'
 			assetsHTML = $.map(data.sort(function (a, b) {return a.ticker < b.ticker ? -1 : 1;}), function (x) {return {id: x.id, ticker: x.ticker, html: '<option value=' + x.id + '>' + x.ticker.toUpperCase() + ' </option>'};});
@@ -113,6 +116,7 @@ var setAsset2 = function (id) {
 		dataType: 'json',
 		method: 'GET',
 		async: false,
+		xhrFields: {withCredentials: true},
 		success: function (data) {
 				asset2 = data;
 				asset2.tradingSessions.sort(function (a, b) {return a.tradingDate < b.tradingDate ? -1 : 1;});
@@ -126,12 +130,13 @@ var setAsset2 = function (id) {
 					dt = new Date(dateTo);
 					dtStr = dt.getFullYear() + '-' + (parseInt(dt.getMonth() ) + 1).toString() + '-' + dt.getDate();
 					$.ajax(
-						{url : 'http://localhost:8080/assets/' + asset2.id + '/tradingsessions?startDate=' + dfStr + '&endDate=' + dtStr,
+						{url: 'http://localhost:8080/assets/' + asset2.id + '/tradingSessions/changePercentage?startDate=' + dfStr + '&endDate=' + dtStr,
 						dataType: 'json',
 						method: 'GET',
 						async: false,
+						xhrFields: {withCredentials: true},
 						success: function (data2) {
-								$.each(data2, function(i, ts) {asset2.tradingSessions.filter(function (x) {return x.tradingDate == ts.tradingDate;})[0]['change'] = ts.closingPrice;});
+								$.each(asset2.tradingSessions, function (i, ts) {ts.change = data2[ts.tradingDate];})
 							}
 						}
 					);

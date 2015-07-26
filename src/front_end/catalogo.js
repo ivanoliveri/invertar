@@ -5,6 +5,7 @@ $.ajax(
 	dataType: 'json',
 	method: 'GET',
 	async: false,
+	xhrFields: {withCredentials: true},
 	success: function (data) {
 			//borrar linea una vez que se agregue assetType en API
 			$.each(data, function (i, a) {a.assetType = 'Accion';} );
