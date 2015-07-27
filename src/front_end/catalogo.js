@@ -69,6 +69,20 @@ $.ajax(
 	}
 );
 
+var loadMarquee = function(){
+	var marqueeHTML;
+	$.ajax(
+		{url : 'http://localhost:8080/assets',
+		dataType: 'json',
+		method: 'GET',
+		xhrFields: {withCredentials: true},
+		success: function (data){
+					$.each(data,function(){marqueeHTML+='<b>'+this.ticker+'</b> $' + this.lastTradingPrice +' &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp &nbsp'});
+				}
+	});
+	$('#marquee').innerHTML +=marqueeHTML;
+};
+
 var loadTable = function (assetType) {
 	assetsCatalogue.loadTable(assetType)
 	$("#assetsCatalogue").dataTable();
