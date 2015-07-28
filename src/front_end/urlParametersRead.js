@@ -1,5 +1,14 @@
-paramsList = $.map(location.search.replace('%20', ' ').replace('+', ' ').replace('?', '').split('&'), function(x) {return x.split('=')[0] + ": '" + x.split('=')[1] + "'";})
-paramsStrToEval = 'var parameters = {'; for (x in paramsList) {x == 0 ? paramsStrToEval = paramsStrToEval + paramsList[0] : paramsStrToEval = paramsStrToEval + ', ' + paramsList[x];}; paramsStrToEval = paramsStrToEval + '};';
+var replaceAll = function(str, replaceThis, replaceFor) {
+	while (str.includes(replaceThis) ) {
+		str = str.replace(replaceThis, replaceFor)
+	};
+	return str
+};
+
 try {
-	eval (paramsStrToEval);
-} catch(err) {/*do nothing*/};
+	paramsList = $.map(replaceAll(replaceAll(location.search, '%20', ' '), '+', ' ').split('&'), function(x) {return replaceAll(x.split('=')[0], '?', '') + '||' + replaceAll(replaceAll(x.split('=')[1], '%3D', '='), '%26', '&');})
+	var parameters = {}
+	$.each(paramsList, function (i, v) {parameters[v.split('||')[0]] = v.split('||')[1];});
+} catch(err) {
+	// do nothing
+};
