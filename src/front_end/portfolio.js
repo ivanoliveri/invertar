@@ -1,28 +1,41 @@
 var portfolio;
 
 try {
-	if (parameters.portfolio == 'porfolio1') {
-		portfolio = {
-			ticker: 'porfolio1',
-			name: 'Porfolio 1',
-			description: 'Descripción del portfolio 1. Más texto.\nMás texto, más......',
-			assets: [
-						{ticker: 'apbr.ba', quantity: 200},
-						{ticker: 'dolar.blue', quantity: 4000},
-						{ticker: 'ypfd.ba', quantity: 30}
-					]
-		};
-	} else {
-		portfolio = {
-			ticker: 'porfolio2',
-			name: 'Porfolio 2',
-			description: 'Descripción del portfolio 2.\nMás texto.\nMás texto, más......',
-			assets: [
-						{ticker: 'apbr.ba', quantity: 10},
-						{ticker: 'dolar.blue', quantity: 4000},
-						{ticker: 'ypfd.ba', quantity: 30}
-					]
-		};
+	if (parameters.portfolio) {
+		$.ajax(
+			{url: 'http://localhost:8080/users/' + user.id + '/portfolios/' + parameters.portfolio,
+			dataType: 'json',
+			method: 'GET',
+			async: false,
+			xhrFields: {withCredentials: true},
+			success: function (data) {
+					portfolio = {
+						id: parameters.portfolio,
+						name: data.name,
+						description: '',
+						assets: []
+					};
+					$.each(data.userAssets, function (k, a) {
+							var ticker;
+							$.ajax(
+								{url: 'http://localhost:8080/assets/' + a.assetId,
+								dataType: 'json',
+								method: 'GET',
+								async: false,
+								xhrFields: {withCredentials: true},
+								success: function (asset) {
+										trans = $.map(a.transactions, function (x) {return x.type == 'PURCHASE' ? x.quantity : - x.quantity;});
+										qty = 0;
+										$.each(trans, function (key, q) {qty += q;});
+										portfolio.assets.push({ticker: asset.ticker, quantity: qty});
+									}
+								}
+							);
+						}
+					);
+				}
+			}
+		);
 	};
 } catch(err) {
 	//do nothing
@@ -38,7 +51,7 @@ $.ajax(
 	xhrFields: {withCredentials: true},
 	success: function (data) {
 			//borrar linea una vez que se agregue assetType en API
-			$.each(data, function (i, a) {a.assetType = 'Accion';} );
+			$.each(data, function (i, a) {a.assetType = 'Accion'; a.inPortfolio = 0;} );
 			assetsCatalogue['data'] = data;
 			assetsCatalogue['assetBox'] = function(asset, action) {
 				ast = this.data.filter(function (x) {return x.ticker == asset;})[0];
@@ -117,10 +130,18 @@ $.ajax(
 					return 0;
 				};
 			},
-			assetsCatalogue['assetticker'] = function(asset) {
+			assetsCatalogue['assetTicker'] = function(asset) {
 				ast = this.data.filter(function (x) {return x.ticker == asset | x.ticker.replace('.', '') == asset;})[0];
 				if (ast) {
 					return ast.ticker;
+				} else {
+					return;
+				};
+			},
+			assetsCatalogue['assetId'] = function(asset) {
+				ast = this.data.filter(function (x) {return x.ticker == asset | x.ticker.replace('.', '') == asset;})[0];
+				if (ast) {
+					return ast.id;
 				} else {
 					return;
 				};
@@ -150,12 +171,55 @@ var allowSaving = function() {
 //Save modal functions
 var savePortfolio = function() {
 	if (portfolio) {
-		//Ajax to save changes to portfolio
-		window.location.href = 'portfolio.html?portfolio=' + portfolio.ticker;
+		newPurchasedAssets = $.map($('.qty-form-control') , function (x) {return {ticker: assetsCatalogue.assetTicker(x.id.replace('-qty', '') ), qty: parseInt(x.value)};}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.ticker;}).indexOf(x.ticker) == -1;});
+		newPurchasedAssetsJsons = $.map(newPurchasedAssets, function (x) {return '{"assetId": ' + assetsCatalogue.assetId(x.ticker) + ', "quantity": ' + x.qty + ', "pricePaid": ' + assetsCatalogue.assetValue(x.ticker) + ', "type": "PURCHASE", "tradingDate": "' + (new Date()).getFullYear() + '-' + (parseInt((new Date()).getMonth()) + 1) + '-' + (new Date()).getDate() + '"}';});
+		preExistingAssetPurchasesJsons = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return '{"assetId": ' + assetsCatalogue.assetId(x.id.replace('-qty-diff-label', '') ) + ', "quantity": ' + parseInt(x.innerHTML) + ', "pricePaid": ' + assetsCatalogue.assetValue(x.id.replace('-qty-diff-label', '') ) + ', "type": "PURCHASE", "tradingDate": "' + (new Date()).getFullYear() + '-' + (parseInt((new Date()).getMonth()) + 1) + '-' + (new Date()).getDate() + '"}';});
+		assetSalesJsons = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return '{"assetId": ' + assetsCatalogue.assetId(x.id.replace('-qty-diff-label', '') ) + ', "quantity": ' + parseInt(x.innerHTML) + ', "pricePaid": ' + assetsCatalogue.assetValue(x.id.replace('-qty-diff-label', '') ) + ', "type": "SELL", "tradingDate": "' + (new Date()).getFullYear() + '-' + (parseInt((new Date()).getMonth()) + 1) + '-' + (new Date()).getDate() + '"}';});
+		transactionsJsons = newPurchasedAssetsJsons.concat(preExistingAssetPurchasesJsons).concat(assetSalesJsons)
+		$.each(transactionsJsons, function (k, json) {
+				$.ajax(
+					{url: 'http://localhost:8080/users/' + user.id + '/portfolios/' + portfolio.id + '/transactions',
+					dataType: 'json',
+					method: 'POST',
+					async: false,
+					xhrFields: {withCredentials: true},
+					contentType: 'application/json',
+					data: json
+					}
+				);
+			}
+		);
+		window.location.href = 'portfolio.html?portfolio=' + portfolio.id;
 	} else {
-		//Ajax to save new portfolio
-		window.location.href = 'portfolio.html';
-	};
+		$.ajax(
+			{
+				url : 'http://localhost:8080/users/' + user.id + '/portfolios',
+				dataType: 'json',
+				method: 'POST',
+				async: false,
+				xhrFields: {withCredentials: true},
+				contentType: 'application/json',
+				data: '{"name":"' + $('#name-textbox')[0].value + '"}',
+				success: function (data) {
+					purchasesJsons = $.map($('.value-label') , function (x) {return '{"assetId": ' + assetsCatalogue.assetId(x.id.replace('-value', '') ) + ', "quantity": ' + $('#' + x.id.replace('-value', '-qty') )[0].value + ', "pricePaid": ' + assetsCatalogue.assetValue(x.id.replace('-value', '') ) + ', "type": "PURCHASE", "tradingDate": "' + (new Date()).getFullYear() + '-' + (parseInt((new Date()).getMonth()) + 1) + '-' + (new Date()).getDate() + '"}';});
+					$.each(purchasesJsons, function (k, json) {
+							$.ajax(
+								{url: 'http://localhost:8080/users/' + user.id + '/portfolios/' + data.id + '/transactions',
+								dataType: 'json',
+								method: 'POST',
+								async: false,
+								xhrFields: {withCredentials: true},
+								contentType: 'application/json',
+								data: json
+								}
+							);
+						}
+					);
+					window.location.href = 'portfolio.html?portfolio=' + data.id;
+				}
+			}
+		);
+	}
 };
 
 var setSaveButtonModalBody = function() {
@@ -172,8 +236,8 @@ var setSaveButtonModalBody = function() {
 	if (portfolio) {
 		purchasesStr = '<br><br><b>Compras</b><br>';
 		purchasesTotal = 0;
-		newPurchasedAssets = $.map(assetsCatalogue.assetsInPortfolio(), function (x) {return x.ticker;}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.ticker;}).indexOf(x) == -1;});
-		purchases = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';}).concat($.map(newPurchasedAssets, function (x) {return assetsCatalogue.assetType(x) + ' <b>' + x + '</b>, <b>' + $('#' + x.replace('.', '') + '-qty')[0].value + '</b> unidades por <b>$' + $('#' + x.replace('.', '') + '-value')[0].innerHTML + '</b><br>';}) );
+		newPurchasedAssets = $.map($('.value-label') , function (x) {return assetsCatalogue.assetTicker(x.id.replace('-value', '') );}).filter(function (x) {return $.map(portfolio.assets, function (y) {return y.ticker;}).indexOf(x) == -1;});
+		purchases = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetTicker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';}).concat($.map(newPurchasedAssets, function (x) {return assetsCatalogue.assetType(x) + ' <b>' + x + '</b>, <b>' + $('#' + x.replace('.', '') + '-qty')[0].value + '</b> unidades por <b>$' + $('#' + x.replace('.', '') + '-value')[0].innerHTML + '</b><br>';}) );
 		purchaseValues = $.map($('[class="sell-buy-qty-label label-buy"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;}).concat($.map(newPurchasedAssets, function (x) {return Math.round(parseFloat($('#' + x.replace('.', '') + '-value')[0].innerHTML) * 100) / 100;}));
 		for (p in purchases) {
 			purchasesStr += purchases[p];
@@ -184,7 +248,7 @@ var setSaveButtonModalBody = function() {
 
 		salesStr = '<br><br><b>Ventas</b><br>';
 		salesTotal = 0;
-		sales = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';});
+		sales = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return assetsCatalogue.assetType(x.id.replace('-qty-diff-label', '') ) + ' <b>' + assetsCatalogue.assetTicker(x.id.replace('-qty-diff-label', '') ) + '</b>, <b>' + x.innerHTML + '</b> unidades por <b>$' + $('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML + '</b><br>';});
 		saleValues = $.map($('[class="sell-buy-qty-label label-sell"'), function (x) {return Math.round(parseFloat($('#' + x.id.replace('-qty-diff-label', '-value-diff-label') )[0].innerHTML) * 100) / 100;});
 		for (s in sales) {
 			salesStr += sales[s];
@@ -195,7 +259,7 @@ var setSaveButtonModalBody = function() {
 	}
 
 	assetsInPortfolioStr = '';
-	assetsInPortfolio = $.map($('.value-label') , function (x) {return assetsCatalogue.assetType(x.id.replace('-value', '') ) + ' <b>' + assetsCatalogue.assetticker(x.id.replace('-value', '') ) + '</b>, <b>' + $('#' + x.id.replace('-value', '-qty') )[0].value + '</b> unidades por <b>$' + x.innerHTML + '</b><br>';});
+	assetsInPortfolio = $.map($('.value-label') , function (x) {return assetsCatalogue.assetType(x.id.replace('-value', '') ) + ' <b>' + assetsCatalogue.assetTicker(x.id.replace('-value', '') ) + '</b>, <b>' + $('#' + x.id.replace('-value', '-qty') )[0].value + '</b> unidades por <b>$' + x.innerHTML + '</b><br>';});
 	for (a in assetsInPortfolio) {
 		assetsInPortfolioStr += assetsInPortfolio[a];
 	};
@@ -209,7 +273,7 @@ var clearSaveButtonModalBody = function() {
 	$('#save-button-modal-body')[0].innerHTML = '%OverwriteString%'
 };
 
-//Dscard functions
+//Discard functions
 var discardPortfolio = function() {
 	//Ajax para limpiar los cambios sin guardar en el porfolio
 	try {
@@ -354,7 +418,7 @@ var setPage = function() {
 															</div> \
 															<div class="modal-footer"> \
 																<button type="button" class="btn btn-default" data-dismiss="modal">No</button> \
-																<button type="button" class="btn btn-primary" onclick="removePortfolio(\'' + portfolio.ticker + '\');" data-dismiss="modal">Sí</button> \
+																<button type="button" class="btn btn-primary" onclick="removePortfolio(\'' + portfolio.id + '\');" data-dismiss="modal">Sí</button> \
 															</div> \
 														</div> \
 													</div> \
@@ -364,7 +428,7 @@ var setPage = function() {
 };
 
 var removePortfolio = function(porftolioticker) {
-	//Ajax para eliminar porfolio con ticker = portfolio.ticker
+	//Ajax para eliminar porfolio con ticker = portfolio.id
 	window.location.href = 'portfolio.html';
 };
 
